@@ -1,0 +1,45 @@
+{
+    "name": "cronv/task-management-bundle",
+    "description": "Обеспечивает тесную интеграцию Управления задачами в полнофункциональный фреймворк Symfony",
+    "type": "symfony-bundle",
+    "keywords": ["bundle", "task-management"],
+    "license": "proprietary",
+    "minimum-stability": "stable",
+    "prefer-stable": true,
+    "require": {
+        "php": ">=8.2",
+        "doctrine/orm": "^2.16",
+        "doctrine/doctrine-bundle": "^2.10",
+        "doctrine/doctrine-migrations-bundle": "^3.2",
+        "symfony/console": "^6.2",
+        "symfony/dotenv": "^6.2",
+        "symfony/validator": "^6.2",
+        "symfony/uid": "^6.2",
+        "symfony/serializer": "^6.2",
+        "symfony/form": "^6.2",
+        "symfony/asset": "^6.2",
+        "symfony/twig-bundle": "^6.2",
+        "symfony/security-bundle": "^6.2",
+        "martin-georgiev/postgresql-for-doctrine": "^2.1"
+    },
+    "require-dev": {
+        "symfony/test-pack": "^1",
+        "roave/security-advisories": "dev-latest"
+    },
+    "repositories": [
+    ],
+    "autoload": {
+        "psr-4": {
+            "cronv\\Task\\Management\\": "src/"
+        }
+    },
+    "extra": {
+        "symfony": {
+            "allow-contrib": false,
+            "require": "^6.2"
+        },
+        "alias": {
+            "cronvTaskManagementBundle": "cronv\\Task\\Management"
+        }
+    }
+}

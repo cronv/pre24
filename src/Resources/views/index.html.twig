@@ -1,0 +1,83 @@
+{% extends 'base.html.twig' %}
+
+{% set title = 'Главная страница' %}
+
+{% block javascripts %}
+    <script src="{{ asset('/bundles/cronvtaskmanagement/js/Classes/Task.js') }}"></script>
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="container mt-3">
+            <!-- Кнопка "Добавить" с иконкой Font Awesome -->
+            <div id="showAdd"  class="d-flex justify-content-end mb-3">
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addModal"><i class="fas fa-plus"></i> Добавить</button>
+            </div>
+
+            {% include 'task/add.html.twig' %}
+            {% include 'task/update.html.twig' %}
+
+            <!-- Таблица задач -->
+            <table class="table table-light table-striped table-responsive">
+                <thead class="table-secondary">
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Имя пользователя</th>
+                    <th scope="col">Название</th>
+                    <th scope="col">Описание</th>
+                    <th scope="col">Срок выполнения</th>
+                    <th scope="col">Дата создания</th>
+                    <th scope="col">Дата обновления</th>
+                    <th scope="col">Действия</th>
+                </tr>
+                </thead>
+                <tbody>
+                <!-- Заполнение данными из базы данных -->
+                <!-- Пример одной строки таблицы (должен быть заменен данными из БД) -->
+                {% for task in pagination %}
+                <tr data-id="{{ task.getId }}">
+                    <td>{{ task.getId }}</td>
+                    <td>
+                        {{ task.getUser.getUsername|default('—') }}
+                    </td>
+                    <td data-input-name="name">
+                        <div class="row">
+                            <div class="col-10">
+                                <div class="text-truncate">
+                                    {{ task.getName }}
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                    <td data-input-name="description">
+                        <div class="row">
+                            <div class="col-10">
+                                <div class="text-truncate">
+                                    {{ task.getDescription|default('—') }}
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                    <td data-input-name="deadline">
+                        {% if task.getDeadline %}
+                            {{ task.getDeadline.format('d.m.Y') }}
+                        {% else %}
+                            —
+                        {% endif %}
+                    </td>
+                    <td>{{ task.getCreatedAt|date('d.m.Y H:i:s') }}</td>
+                    <td>{{ task.getUpdatedAt|date('d.m.Y H:i:s') }}</td>
+                    <td>
+                        <a class="js-edit-render" href="#"><i class="fas fa-edit"></i></a>
+                        <a href="{{ path('cronv-tm-bundle-delete', {'uuid': task.getId}) }}" class="js-delete"><i class="fas fa-trash-alt"></i></a>
+                    </td>
+                </tr>
+                {% endfor %}
+                <!-- ... другие строки ... -->
+                </tbody>
+            </table>
+
+            {{ paginator_render|raw }}
+        </div>
+    </div>
+{% endblock %}

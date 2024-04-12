@@ -1,0 +1,67 @@
+{% extends 'base.html.twig' %}
+
+{% set title = 'Аутентификация' %}
+
+{% block javascripts %}
+    <script src="{{ asset('/bundles/cronvtaskmanagement/js/Classes/Auth.js') }}"></script>
+{% endblock %}
+
+{% block content %}
+    <!-- Основной контент -->
+    <div class="container d-flex flex-column justify-content-center min-vh-100">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                {% if error %}
+                    <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                {% endif %}
+
+                {% if app.user %}
+                    <div class="mb-3">
+                        You are logged in as {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Logout</a>
+                    </div>
+                {% endif %}
+                <!-- Форма входа -->
+                <div class="mb-3 js-form">
+                    <form id="loginForm" action="{{ path('app_login') }}" method="POST">
+                        <h2 class="h3 mb-3 fw-normal">Авторизация</h2>
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="loginUsername" name="username"
+                                   autocomplete="username" placeholder="Имя пользователя" required value="mister.swim">
+                            <label for="loginUsername">Имя пользователя</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="password" class="form-control" id="loginPassword" name="password"
+                                   autocomplete="current-password" placeholder="Пароль" required value="1234">
+                            <label for="loginPassword">Пароль</label>
+                        </div>
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                        <button class="w-100 btn btn-lg btn-primary" type="submit">Войти</button>
+                    </form>
+                </div>
+                <!-- Форма регистрации -->
+                <div class="mb-3 js-form d-none">
+                    <form id="registrationForm" action="" method="POST">
+                        <h2 class="h3 mb-3 fw-normal">Регистрация</h2>
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="registerUsername" name="registerUsername"
+                                   autocomplete="off" placeholder="Имя пользователя" required>
+                            <label for="registerUsername">Имя пользователя</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="password" class="form-control" id="registerPassword" name="registerPassword"
+                                   autocomplete="off" placeholder="Пароль" required>
+                            <label for="registerPassword">Пароль</label>
+                        </div>
+                        <button class="w-100 btn btn-lg btn-secondary" type="submit">Зарегистрироваться</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Дополнительные кнопки -->
+        <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+            <button class="btn btn-danger me-md-2 js-form-select" type="button" data-form="loginForm">Авторизация</button>
+            <button class="btn btn-outline-primary js-form-select" type="button" data-form="registrationForm">Регистрация</button>
+        </div>
+    </div>
+{% endblock %}

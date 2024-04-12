@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <title>{{ title|default('Базовая страница') }}</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {# Для CSS #}
+    <link rel="stylesheet" href="{{ asset('/bundles/cronvtaskmanagement/css/style.css') }}" />
+
+    {# Для JS #}
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="{{ asset('/bundles/cronvtaskmanagement/bootstrap/js/bootstrap.bundle.js') }}"></script>
+    <script src="{{ asset('/bundles/cronvtaskmanagement/js/jquery.min.js') }}"></script>
+{% block javascripts %}
+{% endblock %}
+    <script src="{{ asset('/bundles/cronvtaskmanagement/js/script.js') }}"></script>
+</head>
+<body>
+{% if app.user %}
+    {% include 'menu.html.twig' %}
+{%  endif %}
+
+{% block content %}{% endblock %}
+{% include 'toast.html.twig' %}
+</body>
+</html>

@@ -1,0 +1,31 @@
+@import url('./../bootstrap/css/bootstrap.min.css');
+@import url('./../fontawesome/css/all.min.css');
+
+body {
+    background-color: var(--bs-gray-300);
+}
+
+input, textarea {
+    background: var(--bs-gray-100);
+}
+
+.bg-menu {
+    background-color: var(--bs-gray-400);
+}
+
+.button-animate:hover {
+    transform: scale(1.086);
+}
+
+.button-animate-static {
+    transform: scale(1.086);
+}
+
+.toast {
+    z-index: 1060; /* Установите значение z-index выше, чем у modal-backdrop */
+}
+
+.toast.modal-backdrop {
+    z-index: 1059; /* Установите значение z-index ниже, чем у toast */
+}
+

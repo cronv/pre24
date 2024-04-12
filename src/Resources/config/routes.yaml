@@ -1,0 +1,16 @@
+# Task management
+cronv-tm-bundle:
+  resource: '@cronvTaskManagementBundle/Controller'
+  type: attribute
+
+cronv-tm-bundle-add:
+  resource: '@cronvTaskManagementBundle/Controller'
+  type: attribute
+
+cronv-tm-bundle-update:
+  resource: '@cronvTaskManagementBundle/Controller'
+  type: attribute
+
+cronv-tm-bundle-delete:
+  resource: '@cronvTaskManagementBundle/Controller'
+  type: attribute

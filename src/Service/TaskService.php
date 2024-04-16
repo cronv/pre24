@@ -109,11 +109,12 @@ class TaskService extends BaseService
             );
         }
 
-        if (($this->findName($request->name, Task::class))) {
+        $surveyName = $this->findName($request->name, Task::class);
+        if ($surveyName && $surveyName->getUuid() !== $request->uuid) {
             $this->setHttpCode(Response::HTTP_CONFLICT);
             return new ResponseDTO(
                 message: null,
-                errors: ['name' => 'Такая задача уже существует.']
+                errors: ['name' => 'Такая анкета уже существует.']
             );
         }
 

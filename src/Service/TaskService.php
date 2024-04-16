@@ -109,6 +109,14 @@ class TaskService extends BaseService
             );
         }
 
+        if (($this->findName($request->name, Task::class))) {
+            $this->setHttpCode(Response::HTTP_CONFLICT);
+            return new ResponseDTO(
+                message: null,
+                errors: ['name' => 'Такая задача уже существует.']
+            );
+        }
+
         $entityTask = $task;
         $entityTask
             ->setName($request->name)

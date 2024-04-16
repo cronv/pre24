@@ -4,9 +4,9 @@ namespace cronv\Task\Management\Service;
 
 use ArrayObject;
 use cronv\Task\Management\DTO\PaginatorDTO;
-use cronv\Task\Management\DTO\DeleteTaskDTO;
+use cronv\Task\Management\DTO\DeleteUuidDTO;
 use cronv\Task\Management\DTO\TaskDTO;
-use cronv\Task\Management\DTO\TaskResponseDTO;
+use cronv\Task\Management\DTO\ResponseDTO;
 use cronv\Task\Management\DTO\UpdateTaskDTO;
 use cronv\Task\Management\Entity\Task;
 use cronv\Task\Management\Entity\User;
@@ -59,9 +59,9 @@ class TaskService extends BaseService
      */
     public function add(TaskDTO $request): object
     {
-        if ($task = $this->findName($request->name)) {
+        if ($task = $this->findName($request->name, Task::class)) {
             $this->setHttpCode(Response::HTTP_CONFLICT);
-            return new TaskResponseDTO(
+            return new ResponseDTO(
                 message: null,
                 errors: ['name' => 'Такой ресурс уже существует!']
             );
@@ -82,7 +82,7 @@ class TaskService extends BaseService
         $this->store($entityTask);
         $this->setHttpCode(Response::HTTP_CREATED);
 
-        return new TaskResponseDTO(
+        return new ResponseDTO(
             message: sprintf('Ресурс `%s` успешно создан.', $entityTask->getName()),
             errors: []
         );
@@ -101,19 +101,11 @@ class TaskService extends BaseService
         $validator = Validation::createValidator();
         $validator->validate($request);
 
-        if (!($task = $this->findName($request->name))) {
+        if (!($task = $this->find($request->uuid, Task::class))) {
             $this->setHttpCode(Response::HTTP_NOT_FOUND);
-            return new TaskResponseDTO(
+            return new ResponseDTO(
                 message: null,
                 errors: ['name' => 'Такого ресурса не существует!']
-            );
-        }
-
-        if ($task?->getId() !== $request->uuid) {
-            $this->setHttpCode(Response::HTTP_CONFLICT);
-            return new TaskResponseDTO(
-                message: null,
-                errors: ['name' => 'Такая задача уже существует.']
             );
         }
 
@@ -129,7 +121,7 @@ class TaskService extends BaseService
         $this->store($entityTask);
         $this->setHttpCode(Response::HTTP_CREATED);
 
-        return new TaskResponseDTO(
+        return new ResponseDTO(
             message: sprintf('Ресурс `%s` успешно обновлен.', $entityTask->getName()),
             errors: ['name' => 'Такая задача уже существует.']
         );
@@ -138,19 +130,19 @@ class TaskService extends BaseService
     /**
      * Delete task
      *
-     * @param DeleteTaskDTO $request DeleteTaskDTO data
+     * @param DeleteUuidDTO $request DeleteUuidDTO data
      * @return object
      *
      * @throws StorageException
      */
-    public function delete(DeleteTaskDTO $request): object
+    public function delete(DeleteUuidDTO $request): object
     {
         $validator = Validation::createValidator();
         $validator->validate($request);
 
         if (!($task = $this->em->getRepository(Task::class)->find($request->uuid))) {
             $this->setHttpCode(Response::HTTP_NOT_FOUND);
-            return new TaskResponseDTO(
+            return new ResponseDTO(
                 message: sprintf('Ресурса `%s` не существует.', $request->uuid),
                 errors: []
             );
@@ -159,20 +151,9 @@ class TaskService extends BaseService
         $this->deleteMultipleRecords($task);
 
         $this->setHttpCode(Response::HTTP_NO_CONTENT);
-        return new TaskResponseDTO(
+        return new ResponseDTO(
             message: 'Ресурс успешно удален.',
             errors: []
         );
-    }
-
-    /**
-     * Search task by name
-     *
-     * @param string $name Name task
-     * @return Task|null
-     */
-    protected function findName(string $name): ?Task
-    {
-        return $this->em->getRepository(Task::class)->IFindName($name);
     }
 }

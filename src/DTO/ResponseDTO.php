@@ -8,10 +8,10 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
 /**
  * Task Response DTO
  */
-readonly class TaskResponseDTO
+readonly class ResponseDTO
 {
     /**
-     * TaskResponseDTO constructor.
+     * ResponseDTO constructor.
      *
      * @param ?string $message Message
      * @param array $errors Array errors

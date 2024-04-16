@@ -5,11 +5,11 @@ namespace cronv\Task\Management\DTO\Trait;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * Delete task DTO trait
+ * UUID DTO trait
  */
-trait DeleteTaskDTOTrait
+trait UuidDTOTrait
 {
-    /** @var string UUID task */
+    /** @var string UUID */
     #[Assert\Uuid]
     public string $uuid;
 }

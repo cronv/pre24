@@ -3,12 +3,12 @@
 namespace cronv\Task\Management\DTO;
 
 use cronv\Task\Management\Component\AbstractJsonRequest;
-use cronv\Task\Management\DTO\Trait\DeleteTaskDTOTrait;
+use cronv\Task\Management\DTO\Trait\UuidDTOTrait;
 
 /**
  * Delete task DTO
  */
-class DeleteTaskDTO extends AbstractJsonRequest
+class DeleteUuidDTO extends AbstractJsonRequest
 {
-    use DeleteTaskDTOTrait;
+    use UuidDTOTrait;
 }

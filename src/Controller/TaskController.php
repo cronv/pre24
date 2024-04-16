@@ -2,7 +2,7 @@
 
 namespace cronv\Task\Management\Controller;
 
-use cronv\Task\Management\DTO\DeleteTaskDTO;
+use cronv\Task\Management\DTO\DeleteUuidDTO;
 use cronv\Task\Management\DTO\TaskDTO;
 use cronv\Task\Management\DTO\UpdateTaskDTO;
 use cronv\Task\Management\Exception\StorageException;
@@ -75,12 +75,12 @@ class TaskController extends AbstractController
      * Action update task
      *
      * @param UpdateTaskDTO $request UpdateTaskDTO data
-     * @return JsonResponse
+     * @return Response
      *
      * @throws StorageException
      */
     #[Route('/task/update/{uuid}', name: 'cronv-tm-bundle-update', methods: 'PUT')]
-    public function update(UpdateTaskDTO $request): JsonResponse
+    public function update(UpdateTaskDTO $request): Response
     {
         $service = $this->serviceTask;
         $service->setUserId($this->getUser()->getId());
@@ -93,13 +93,13 @@ class TaskController extends AbstractController
     /**
      * Action delete task
      *
-     * @param DeleteTaskDTO $request DeleteTaskDTO data
+     * @param DeleteUuidDTO $request DeleteUuidDTO data
      * @return Response
      *
      * @throws StorageException
      */
     #[Route('/task/delete/{uuid}', name: 'cronv-tm-bundle-delete', methods: 'DELETE')]
-    public function delete(DeleteTaskDTO $request): Response
+    public function delete(DeleteUuidDTO $request): Response
     {
         $service = $this->serviceTask;
         $service->setUserId($this->getUser()->getId());

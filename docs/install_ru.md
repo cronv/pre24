@@ -168,7 +168,7 @@ doctrine:
 ```yaml
 doctrine_migrations:
     migrations_paths:
-        'cronvTaskManagementMigrations': '@cronvTaskManagementBundle/migrations'
+        'cronvTaskManagementMigrations': '@cronvTaskManagementBundle/../migrations'
 ```
 
 #### 4.2 Применение миграции

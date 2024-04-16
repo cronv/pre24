@@ -128,7 +128,7 @@ class TaskService extends BaseService
         }
 
         $this->store($entityTask);
-        $this->setHttpCode(Response::HTTP_CREATED);
+        $this->setHttpCode(Response::HTTP_OK);
 
         return new ResponseDTO(
             message: sprintf('Ресурс `%s` успешно обновлен.', $entityTask->getName()),

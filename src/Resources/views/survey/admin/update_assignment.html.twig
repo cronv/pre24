@@ -1,0 +1,6 @@
+{% extends 'survey/admin/add_assignment.html.twig' %}
+
+{% set idModal = 'editModal' %}
+{% set modalTitle = 'Обновить назначение' %}
+{% set action = path('ctb-survey-admin-am-update', {'uuid': '1'}) %}
+{% set method = 'PUT' %}

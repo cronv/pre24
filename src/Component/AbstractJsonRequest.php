@@ -38,7 +38,7 @@ abstract class AbstractJsonRequest
      *
      * @return Request
      */
-    public function getRequest(): Request
+    protected function getRequest(): Request
     {
         return $this->requestStack->getCurrentRequest();
     }

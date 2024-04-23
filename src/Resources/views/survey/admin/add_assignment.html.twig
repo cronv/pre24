@@ -1,0 +1,61 @@
+{% set idModal = idModal|default('addModal') %}
+{% set action = action|default(path('ctb-survey-admin-am-add')) %}
+{% set method = method|default('POST') %}
+
+<!-- Modal -->
+<div class="modal fade" id="{{ idModal }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="addForm" action="{{ action }}" method="{{ method }}">
+                <!-- Форма для добавления задачи -->
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalLabel">Добавить назначение</h5>
+                    <button type="button" class="btn-close ms-auto" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="userId" class="form-label">Пользователь</label>
+                        <select class="form-select" id="userId" name="user_id" required>
+                            {% for user in listUsers %}
+                                <option value="{{ user.getId }}">{{ user.getUsername }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="surveyFor" class="form-label">Анкета</label>
+                        <select class="form-select" id="surveyFor" name="survey_id" required>
+                            {% for survey in listSurvey %}
+                                <option value="{{ survey.getUuid }}">{{ survey.getName }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="attempsFor" class="form-label">Кол-во попыток</label>
+                        <input type="number" class="form-control" id="attempsFor" name="attempts">
+                    </div>
+                    <div class="mb-3">
+                        <label for="accessFor" class="form-label">Доступ</label>
+                        <select class="form-select" id="accessFor" name="access">
+                            <option value="">Всем</option>
+                            {% for k, correct in listCorrects %}
+                                <option value="{{ k }}">{{ correct }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="startedAt" class="form-label">Начало</label>
+                        <input type="datetime-local" class="form-control" id="startedAt" name="started_at">
+                    </div>
+                    <div class="mb-3">
+                        <label for="endedAt" class="form-label">Окончание</label>
+                        <input type="datetime-local" class="form-control" id="endedAt" name="ended_at">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отменить</button>
+                    <button type="submit" class="btn btn-primary">Сохранить</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

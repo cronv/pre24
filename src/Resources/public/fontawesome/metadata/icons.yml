@@ -10243,7 +10243,7 @@ comment:
       - ' discussion'
       - ' talking'
       - Right Speech Bubble
-      - answer
+      - survey
       - bubble
       - chat
       - commenting
@@ -10276,7 +10276,7 @@ comment-dollar:
   label: Comment Dollar
   search:
     terms:
-      - answer
+      - survey
       - bubble
       - chat
       - commenting
@@ -10317,7 +10317,7 @@ comment-dots:
   label: Comment Dots
   search:
     terms:
-      - answer
+      - survey
       - balloon
       - bubble
       - chat
@@ -10357,7 +10357,7 @@ comment-medical:
   search:
     terms:
       - advice
-      - answer
+      - survey
       - bubble
       - chat
       - commenting
@@ -10390,7 +10390,7 @@ comment-slash:
   label: Comment Slash
   search:
     terms:
-      - answer
+      - survey
       - bubble
       - cancel
       - chat
@@ -10427,7 +10427,7 @@ comment-sms:
   label: Comment Sms
   search:
     terms:
-      - answer
+      - survey
       - chat
       - conversation
       - message
@@ -10465,7 +10465,7 @@ comments:
       - ' discussion'
       - ' talking'
       - Two Speech Bubbles
-      - answer
+      - survey
       - bubble
       - chat
       - commenting
@@ -10499,7 +10499,7 @@ comments-dollar:
   label: Comments Dollar
   search:
     terms:
-      - answer
+      - survey
       - bubble
       - chat
       - commenting
@@ -25514,7 +25514,7 @@ message:
       - ' conversation'
       - ' discussion'
       - ' talking'
-      - answer
+      - survey
       - bubble
       - chat
       - commenting
@@ -42138,7 +42138,7 @@ voicemail:
   label: Voicemail
   search:
     terms:
-      - answer
+      - survey
       - inbox
       - message
       - phone

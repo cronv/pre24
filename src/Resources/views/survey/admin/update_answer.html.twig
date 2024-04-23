@@ -1,0 +1,6 @@
+{% extends 'survey/admin/add_answer.html.twig' %}
+
+{% set idModal = 'editModal' %}
+{% set modalTitle = 'Обновить ответ' %}
+{% set action = path('ctb-survey-admin-a-update', {'id': '1'}) %}
+{% set method = 'PUT' %}

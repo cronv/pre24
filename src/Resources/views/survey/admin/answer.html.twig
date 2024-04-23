@@ -1,0 +1,54 @@
+{% extends 'survey/admin/index.html.twig' %}
+
+{% set title = 'Вопросы' %}
+
+{% block javascripts %}
+    <script src="{{ asset('/bundles/cronvtaskmanagement/js/Classes/Survey.js') }}"></script>
+{% endblock %}
+
+{% block table %}
+    {% include 'survey/admin/add_answer.html.twig' %}
+    {% include 'survey/admin/update_answer.html.twig' %}
+
+    <!-- Таблица задач -->
+    <table class="table table-light table-striped table-responsive">
+        <thead class="table-secondary">
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Ответ</th>
+            <th scope="col">Правильный</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- Заполнение данными из базы данных -->
+        <!-- Пример одной строки таблицы (должен быть заменен данными из БД) -->
+        {% for answer in pagination %}
+            {# Получение ключа is_bool #}
+            {% set keyStr = answer.getIsCorrect ? 'true' : 'false' %}
+            <tr data-id="{{ answer.getId }}">
+                <td>{{ answer.getId }}</td>
+                <td data-input-name="name">
+                    <div class="row">
+                        <div class="col-10">
+                            <div class="text-truncate">
+                                {{ answer.getValue }}
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <td data-input-name="is_correct" data-value="{{ keyStr }}">
+                    {{ listCorrects[keyStr] }}
+                </td>
+                <td>
+                    <a class="js-edit-render" href="#"><i class="fas fa-edit"></i></a>
+                    <a href="{{ path('ctb-survey-admin-a-delete', {'id': answer.getId}) }}" class="js-delete"><i class="fas fa-trash-alt"></i></a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <script>
+        Survey.startIndex = 1;
+        Survey.endIndex = 3;
+    </script>
+{% endblock %}

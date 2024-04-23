@@ -236,7 +236,7 @@ draft2-digital:
 dragnsurvey:
   icons:
     - user-magnifying-glass
-  label: Drag’n Survey
+  label: Drag’n Survey.php
   url: 'https://www.dragnsurvey.com'
 dyalog-apl:
   icons:

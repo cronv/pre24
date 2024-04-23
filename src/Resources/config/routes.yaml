@@ -14,3 +14,81 @@ cronv-tm-bundle-update:
 cronv-tm-bundle-delete:
   resource: '@cronvTaskManagementBundle/Controller'
   type: attribute
+
+
+# Survey
+ctb-survey-admin:
+  resource: '@cronvTaskManagementBundle/Controller'
+  type: attribute
+
+ctb-survey-admin-add:
+  resource: '@cronvTaskManagementBundle/Controller'
+  type: attribute
+
+ctb-survey-admin-update:
+  resource: '@cronvTaskManagementBundle/Controller'
+  type: attribute
+
+ctb-survey-admin-delete:
+  resource: '@cronvTaskManagementBundle/Controller'
+  type: attribute
+
+ctb-survey-admin-q:
+  resource: '@cronvTaskManagementBundle/Controller'
+  type: attribute
+
+ctb-survey-admin-q-add:
+  resource: '@cronvTaskManagementBundle/Controller'
+  type: attribute
+
+ctb-survey-admin-q-update:
+  resource: '@cronvTaskManagementBundle/Controller'
+  type: attribute
+
+ctb-survey-admin-q-delete:
+  resource: '@cronvTaskManagementBundle/Controller'
+  type: attribute
+
+ctb-survey-admin-a:
+  resource: '@cronvTaskManagementBundle/Controller'
+  type: attribute
+
+ctb-survey-admin-a-add:
+  resource: '@cronvTaskManagementBundle/Controller'
+  type: attribute
+
+ctb-survey-admin-a-update:
+  resource: '@cronvTaskManagementBundle/Controller'
+  type: attribute
+
+ctb-survey-admin-a-delete:
+  resource: '@cronvTaskManagementBundle/Controller'
+  type: attribute
+
+ctb-survey-admin-am:
+  resource: '@cronvTaskManagementBundle/Controller'
+  type: attribute
+
+ctb-survey-admin-am-add:
+  resource: '@cronvTaskManagementBundle/Controller'
+  type: attribute
+
+ctb-survey-admin-am-update:
+  resource: '@cronvTaskManagementBundle/Controller'
+  type: attribute
+
+ctb-survey-admin-am-delete:
+  resource: '@cronvTaskManagementBundle/Controller'
+  type: attribute
+
+ctb-survey:
+  resource: '@cronvTaskManagementBundle/Controller'
+  type: attribute
+
+ctb-survey-as:
+  resource: '@cronvTaskManagementBundle/Controller'
+  type: attribute
+
+ctb-survey-processed:
+  resource: '@cronvTaskManagementBundle/Controller'
+  type: attribute

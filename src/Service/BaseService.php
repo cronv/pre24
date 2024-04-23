@@ -100,20 +100,32 @@ abstract class BaseService
     /**
      * Search survey by name
      *
-     * @param string $name Name survey
+     * @param string|array $name Name survey
      * @param string $persistent Entity
      *
      * @return ?object
      */
-    protected function findName(string $name, string $persistent): ?object
+    protected function findName(string|array $name, string $persistent): ?object
     {
         return $this->em->getRepository($persistent)->IFindName($name);
     }
 
     /**
+     * Get next.
+     *
+     * @param string $persistent Entity
+     * @param array $params Params
+     * @return object|null
+     */
+    protected function next(string $persistent, array $params): ?object
+    {
+        return $this->em->getRepository($persistent)->next($params);
+    }
+
+    /**
      * Search survey by id (uuid)
      *
-     * @param string|int $id Name survey
+     * @param string|int $id ID
      * @param string $persistent Entity
      *
      * @return ?object
@@ -121,6 +133,34 @@ abstract class BaseService
     protected function find(string|int $id, string $persistent): ?object
     {
         return $this->em->getRepository($persistent)->find($id);
+    }
+
+    /**
+     * Search survey by criteria
+     *
+     * @param array $criteria Criteria params
+     * @param string $persistent Entity
+     * @param ?array $orderBy Order By
+     *
+     * @return ?object
+     */
+    protected function findOneBy(string $persistent, array $criteria, ?array $orderBy = null): ?object
+    {
+        return $this->em->getRepository($persistent)->findOneBy($criteria, $orderBy);
+    }
+
+    /**
+     * Search list by criteria
+     *
+     * @param array $criteria Criteria params
+     * @param string $persistent Entity
+     * @param ?array $orderBy Order By
+     *
+     * @return array
+     */
+    protected function findBy(string $persistent, array $criteria, ?array $orderBy = null): array
+    {
+        return $this->em->getRepository($persistent)->findBy($criteria, $orderBy);
     }
 
     /**

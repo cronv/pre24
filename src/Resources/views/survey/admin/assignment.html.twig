@@ -1,0 +1,77 @@
+{% extends 'survey/admin/index.html.twig' %}
+
+{% set title = 'Назначенные' %}
+
+{% block javascripts %}
+    <script src="{{ asset('/bundles/cronvtaskmanagement/js/Classes/Survey.js') }}"></script>
+{% endblock %}
+
+{% block table %}
+    {% include 'survey/admin/add_assignment.html.twig' %}
+    {% include 'survey/admin/update_assignment.html.twig' %}
+
+    <!-- Таблица задач -->
+    <table class="table table-light table-striped table-responsive">
+        <thead class="table-secondary">
+        <tr>
+            <th scope="col">Пользователь</th>
+            <th scope="col">Анкета</th>
+            <th scope="col">Попытки</th>
+            <th scope="col">Доступ</th>
+            <th scope="col">Начало</th>
+            <th scope="col">Конец</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- Заполнение данными из базы данных -->
+        <!-- Пример одной строки таблицы (должен быть заменен данными из БД) -->
+        {% for am in pagination %}
+            {% set survey = am.getSurvey %}
+            <tr data-id="{{ survey.getUuid }}">
+                <td>
+                    {{ am.getUser().getUsername() }}
+                </td>
+                <td data-input-name="name">
+                    <div class="row">
+                        <div class="col-10">
+                            <div class="text-truncate">
+                                {{ survey.getName }}
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    {% if am.getAttempts %}
+                        {{ am.getAttempts }}
+                    {% else %}
+                        —
+                    {% endif %}
+                </td>
+                <td>
+                    {% if am.getAccess %}
+                        {{ am.getAccess }}
+                    {% else %}
+                        —
+                    {% endif %}
+                </td>
+                <td data-input-name="datetime-local">{{ am.getStartedAt|date('d.m.Y H:i:s') }}</td>
+                <td data-input-name="datetime-local">
+                    {% if am.getEndedAt %}
+                        {{ am.getEndedAt.format('d.m.Y') }}
+                    {% else %}
+                        —
+                    {% endif %}
+                </td>
+                <td>
+                    <a class="js-edit-render" href="#"><i class="fas fa-edit"></i></a>
+                    <a href="{{ path('ctb-survey-admin-am-delete', {'id': am.getUser().getId, 'uuid': survey.getUuid}) }}" class="js-delete"><i class="fas fa-trash-alt"></i></a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <script>
+        Survey.startIndex = 0;
+        Survey.endIndex = 6;
+    </script>
+{% endblock %}

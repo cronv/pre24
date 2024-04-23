@@ -20,7 +20,12 @@
     {% include 'menu.html.twig' %}
 {%  endif %}
 
+<div class="container">
+    <div class="container mt-3">
 {% block content %}{% endblock %}
+    </div>
+</div>
+
 {% include 'toast.html.twig' %}
 </body>
 </html>

@@ -3,7 +3,35 @@
     <div class="container">
         <!-- Бренд и кнопка переключения на мобильных устройствах -->
         <a class="navbar-brand" href="{{ path('cronv-tm-bundle') }}">Главная</a>
-        <a class="nav-link" href="{{ path('cronv-tm-bundle') }}">Инструкция</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-start" id="navbarNav">
+            <ul class="navbar-nav">
+                {% if is_granted('ROLE_ADMIN') %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" id="navbarDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            Анкетирование
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown" data-bs-auto-close="false">
+                            <li><a class="dropdown-item" href="{{ path('ctb-survey-admin') }}">Анкеты</a></li>
+                            <li><a class="dropdown-item" href="{{ path('ctb-survey') }}">Опрос</a></li>
+                            <li><a class="dropdown-item" href="{{ path('ctb-survey-admin-am') }}">Назначение</a></li>
+                            <li><a class="dropdown-item" href="#">Статистика</a></li>
+                            <!-- Добавьте другие пункты меню здесь -->
+                        </ul>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('ctb-survey-admin') }}">Опрос</a>
+                    </li>
+                {% endif %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('cronv-tm-bundle') }}">Инструкция</a>
+                </li>
+            </ul>
+        </div>
         <!-- Ссылки навигации -->
         <div class="collapse navbar-collapse justify-content-end" id="navbarNavAltMarkup">
             <div class="navbar-nav">

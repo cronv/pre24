@@ -15,7 +15,8 @@ class AuthMiddleware
 {
     /** @var array List of allowed controllers */
     protected array $allowedControllers = [
-        'TaskController'
+        'TaskController',
+        'SurveyController',
     ];
 
     /**

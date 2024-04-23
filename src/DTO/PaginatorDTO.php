@@ -2,7 +2,6 @@
 
 namespace cronv\Task\Management\DTO;
 
-use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 
 /**

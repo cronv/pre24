@@ -1,0 +1,41 @@
+{% extends 'survey/index.html.twig' %}
+
+{% set title = 'Данные опроса' %}
+
+{% block content %}
+    {% set current = processed.question %}
+    {% set survey = current.0 %}
+    <!-- Титул опроса -->
+    <div class="mt-5 mb-3">
+        <h1 class="text-center">{{ survey.getName }}</h1>
+    </div>
+
+    <!-- Вопрос -->
+    <div class="mb-4">
+        <h2>Вопрос:</h2>
+        <p>{{ current.name }}</p>
+    </div>
+
+    <form action="POST">
+        <!-- Перечисление с радиокнопками -->
+        <div class="mb-4">
+            <h3>Выберите один вариант:</h3>
+            {% for answer in processed.answers %}
+                {% set questType = answer.getQuestion.getQuestionType %}
+                {% if questType.getName == 'radio' %}
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="radio" id="radio{{ questType.getId }}">
+                        <label class="form-check-label" for="radio{{ questType.getId }}">
+                            {{ answer.getValue }}
+                        </label>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+
+        <!-- Кнопка отправки ответа -->
+        <div class="text-end">
+            <button type="submit" class="btn btn-primary">Отправить >></button>
+        </div>
+    </form>
+{% endblock %}

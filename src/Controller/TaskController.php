@@ -18,7 +18,7 @@ use Symfony\Component\Validator\Validation;
 /**
  * Controller tasks
  */
-class TaskController extends AbstractController
+class TaskController extends BaseController
 {
     /**
      * TaskController constructor
@@ -107,18 +107,5 @@ class TaskController extends AbstractController
         $status = $service->getHttpCode();
 
         return $this->json($data, $status);
-    }
-
-    /**
-     * Returns a JsonResponse that uses the serializer component if enabled, or json_encode
-     *
-     * @param int $status The HTTP status code (200 "OK" by default)
-     */
-    protected function json(mixed $data, int $status = 200, array $headers = [], array $context = []): JsonResponse
-    {
-        $context = array_merge($context, [
-            'json_encode_options' => JsonResponse::DEFAULT_ENCODING_OPTIONS | JSON_UNESCAPED_UNICODE
-        ]);
-        return parent::json($data, $status, $headers, $context);
     }
 }

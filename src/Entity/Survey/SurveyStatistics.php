@@ -3,17 +3,22 @@
 namespace cronv\Task\Management\Entity\Survey;
 
 use cronv\Task\Management\Entity\User;
-use cronv\Task\Management\Repository\TaskRepository;
+use cronv\Task\Management\Repository\Survey\SurveyStatisticsRepository;
 use DateTimeInterface;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Uid\UuidV4;
 
 #[ORM\Table(name: "survey_statistics")]
-#[ORM\Entity(repositoryClass: TaskRepository::class)]
+#[ORM\Entity(repositoryClass: SurveyStatisticsRepository::class)]
 class SurveyStatistics
 {
-    /** @var User User */
+    /** @var string UUID */
     #[ORM\Id]
+    #[ORM\Column(name: "uuid", type: Types::GUID)]
+    private string $uuid;
+
+    /** @var User User */
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: "users")]
     #[ORM\JoinColumn(name: "user_id", referencedColumnName: "id")]
     private User $userId;
@@ -34,6 +39,24 @@ class SurveyStatistics
     /** @var DateTimeInterface Created */
     #[ORM\Column(name: "created_at", type: Types::DATETIME_MUTABLE, insertable: false, updatable: false)]
     private DateTimeInterface $createdAt;
+
+    /**
+     * SurveyResults constructor.
+     */
+    public function __construct()
+    {
+        $this->uuid = UuidV4::v4();
+    }
+
+    /**
+     * Get the UUID.
+     *
+     * @return string
+     */
+    public function getUuid(): string
+    {
+        return $this->uuid;
+    }
 
     /**
      * Get the User.

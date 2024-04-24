@@ -144,7 +144,8 @@ final class Version20240107042711 extends AbstractMigration
             user_id BIGINT NOT NULL,
             survey_uuid UUID NOT NULL,
             question_id BIGINT NOT NULL,
-            answer_id BIGINT NOT NULL
+            answer_id BIGINT NOT NULL,
+            text TEXT NULL,
         );');
 
         $this->addSql('CREATE INDEX idx_survey_results__user_id__survey_uuid ON survey_results(user_id, survey_uuid);');
@@ -154,6 +155,7 @@ final class Version20240107042711 extends AbstractMigration
         $this->addSql("COMMENT ON COLUMN survey_results.survey_uuid IS 'Внешний ключ survey.uuid';");
         $this->addSql("COMMENT ON COLUMN survey_results.question_id IS 'Внешний ключ question.id';");
         $this->addSql("COMMENT ON COLUMN survey_results.answer_id IS 'Внешний ключ answer.id';");
+        $this->addSql("COMMENT ON COLUMN survey_results.text IS 'Вводимый ответ (Н)';");
 
         //--------------------------------------------------------------------------------
         // Таблица для статистики проведения анкетирования

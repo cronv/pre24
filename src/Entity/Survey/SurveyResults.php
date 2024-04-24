@@ -3,42 +3,69 @@
 namespace cronv\Task\Management\Entity\Survey;
 
 use cronv\Task\Management\Entity\User;
-use cronv\Task\Management\Repository\TaskRepository;
+use cronv\Task\Management\Repository\Survey\SurveyResultsRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Table(name: "survey_results")]
-#[ORM\Entity(repositoryClass: TaskRepository::class)]
+#[ORM\Entity(repositoryClass: SurveyResultsRepository::class)]
 class SurveyResults
 {
-    /** @var User User */
-    #[ORM\Id]
-    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: "users")]
-    #[ORM\JoinColumn(name: "user_id", referencedColumnName: "id")]
-    private User $userId;
-
-    /** @var Survey Survey */
-    #[ORM\ManyToOne(targetEntity: Survey::class, inversedBy: "survey")]
-    #[ORM\JoinColumn(name: "survey_uuid", referencedColumnName: "uuid")]
-    private Survey $surveyUuid;
-
-    /** @var Question Question */
-    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: "question")]
-    #[ORM\JoinColumn(name: "question_id", referencedColumnName: "id")]
-    private Question $questionId;
-
     /** @var Answer Answer */
-    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: "answer")]
+    #[ORM\ManyToOne(targetEntity: Answer::class, inversedBy: "answer")]
     #[ORM\JoinColumn(name: "answer_id", referencedColumnName: "id")]
-    private Answer $answerId;
+    private Answer $answer;
+
+    /** @var string Вводимый ответ */
+    #[ORM\Column(name: "text", type: Types::STRING, nullable: true)]
+    private string $text;
+
+    /**
+     * SurveyResults constructor.
+     *
+     * @param string $uuid UUID
+     * @param User $user User
+     * @param Survey $survey Survey
+     * @param Question $question Question
+     */
+    public function __construct(
+        #[ORM\Id]
+        #[ORM\Column(name: "uuid", type: Types::GUID)]
+        private readonly string $uuid,
+
+        #[ORM\ManyToOne(targetEntity: User::class, inversedBy: "users")]
+        #[ORM\JoinColumn(name: "user_id", referencedColumnName: "id")]
+        private readonly User $user,
+
+        #[ORM\ManyToOne(targetEntity: Survey::class, inversedBy: "survey")]
+        #[ORM\JoinColumn(name: "survey_uuid", referencedColumnName: "uuid")]
+        private readonly Survey $survey,
+
+        #[ORM\ManyToOne(targetEntity: Question::class, inversedBy: "question")]
+        #[ORM\JoinColumn(name: "question_id", referencedColumnName: "id")]
+        private readonly Question $question
+    )
+    {
+    }
+
+    /**
+     * Get the UUID.
+     *
+     * @return string
+     */
+    public function getUuid(): string
+    {
+        return $this->uuid;
+    }
 
     /**
      * Get the User.
      *
      * @return User
      */
-    public function getUserId(): User
+    public function getUser(): User
     {
-        return $this->userId;
+        return $this->user;
     }
 
     /**
@@ -46,9 +73,9 @@ class SurveyResults
      *
      * @return Survey
      */
-    public function getSurveyUuid(): Survey
+    public function getSurvey(): Survey
     {
-        return $this->surveyUuid;
+        return $this->survey;
     }
 
     /**
@@ -56,9 +83,9 @@ class SurveyResults
      *
      * @return Question
      */
-    public function getQuestionId(): Question
+    public function getQuestion(): Question
     {
-        return $this->questionId;
+        return $this->question;
     }
 
     /**
@@ -66,8 +93,40 @@ class SurveyResults
      *
      * @return Answer
      */
-    public function getAnswerId(): Answer
+    public function getAnswer(): Answer
     {
-        return $this->answerId;
+        return $this->answer;
+    }
+
+    /**
+     * Set answer.
+     *
+     * @param Answer $answer Answer
+     * @return void
+     */
+    public function setAnswer(Answer $answer): void
+    {
+        $this->answer = $answer;
+    }
+
+    /**
+     * Get text.
+     *
+     * @return string
+     */
+    public function getText(): string
+    {
+        return $this->text;
+    }
+
+    /**
+     * Set text.
+     *
+     * @param string $text Text (answer)
+     * @return void
+     */
+    public function setText(string $text): void
+    {
+        $this->text = $text;
     }
 }

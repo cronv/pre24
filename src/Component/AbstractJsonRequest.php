@@ -53,7 +53,8 @@ abstract class AbstractJsonRequest
         $request = $this->getRequest();
         $reflection = new \ReflectionClass($this);
 
-        if ($request->getContent()) {
+
+        if (json_validate($request->getContent())) {
             foreach ($request->toArray() as $property => $value) {
                 $attribute = self::camelCase($property);
 
@@ -71,6 +72,22 @@ abstract class AbstractJsonRequest
                 if (property_exists($this, $attribute)) {
                     $reflectionProperty = $reflection->getProperty($attribute);
                     $reflectionProperty->setValue($this, $value);
+                }
+            }
+        }
+
+        // Form data
+        if ($formData = $request->request->all()) {
+            $arrayData = [];
+            foreach ($formData as $property => $values) {
+                $attribute = self::camelCase($property);
+
+                foreach ($values as $k => $v) {
+                    $arrayData[$k] = $v;
+                }
+                if (property_exists($this, $attribute)) {
+                    $reflectionProperty = $reflection->getProperty($attribute);
+                    $reflectionProperty->setValue($this, $arrayData);
                 }
             }
         }

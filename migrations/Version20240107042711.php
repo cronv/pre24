@@ -122,17 +122,32 @@ final class Version20240107042711 extends AbstractMigration
         $this->addSql("COMMENT ON COLUMN survey_assignment.ended_at IS 'Окончание';");
 
         //--------------------------------------------------------------------------------
+        // Таблица новых uuid для повторного прохождения и сохранения результатов
+        $this->addSql('
+        CREATE TABLE uuid_results (
+            uuid UUID NOT NULL,
+            uuid_new UUID NOT NULL
+        );');
+
+        $this->addSql('CREATE INDEX idx_uuid_results__uuid__uuid_new ON uuid_results(uuid, uuid_new);');
+        $this->addSql("COMMENT ON TABLE uuid_results IS 'Список новых uuid для повторного прохождения и сохранения результатов (абстракция вместо Redis)';");
+        $this->addSql("COMMENT ON TABLE uuid_results.uuid IS 'Внешний ключ survey_assignment.survey_uuid';");
+        $this->addSql("COMMENT ON TABLE uuid_results.uuid_new IS 'Новый UUID';");
+
+        //--------------------------------------------------------------------------------
         // Таблица для результатов проведения анкетирования
         $this->addSql('
         CREATE TABLE survey_results (
+            uuid UUID NOT NULL,
             user_id BIGINT NOT NULL,
             survey_uuid UUID NOT NULL,
             question_id BIGINT NOT NULL,
             answer_id BIGINT NOT NULL
         );');
 
-        $this->addSql('CREATE UNIQUE INDEX uq_survey_results__user_id__survey_uuid ON survey_results(user_id, survey_uuid);');
+        $this->addSql('CREATE INDEX idx_survey_results__user_id__survey_uuid ON survey_results(user_id, survey_uuid);');
         $this->addSql("COMMENT ON TABLE survey_results IS 'Список результатов анкетирования';");
+        $this->addSql("COMMENT ON TABLE survey_results.uuid IS 'Внешний ключ uuid_results.uuid_new';");
         $this->addSql("COMMENT ON COLUMN survey_results.user_id IS 'Внешний ключ users.id';");
         $this->addSql("COMMENT ON COLUMN survey_results.survey_uuid IS 'Внешний ключ survey.uuid';");
         $this->addSql("COMMENT ON COLUMN survey_results.question_id IS 'Внешний ключ question.id';");
@@ -142,6 +157,7 @@ final class Version20240107042711 extends AbstractMigration
         // Таблица для статистики проведения анкетирования
         $this->addSql('
         CREATE TABLE survey_statistics (
+            uuid UUID NOT NULL,
             user_id BIGINT NOT NULL,
             survey_uuid UUID NOT NULL,
             number_questions INTEGER NOT NULL,
@@ -149,8 +165,9 @@ final class Version20240107042711 extends AbstractMigration
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
         );');
 
-        $this->addSql('CREATE UNIQUE INDEX uq_survey_statistics__user_id__survey_uuid ON survey_statistics(user_id, survey_uuid);');
+        $this->addSql('CREATE INDEX idx_survey_statistics__user_id__survey_uuid ON survey_statistics(user_id, survey_uuid);');
         $this->addSql("COMMENT ON TABLE survey_statistics IS 'Список статистики анкетирования';");
+        $this->addSql("COMMENT ON TABLE survey_statistics.uuid IS 'Внешний ключ uuid_results.uuid_new';");
         $this->addSql("COMMENT ON COLUMN survey_statistics.user_id IS 'Внешний ключ users.id';");
         $this->addSql("COMMENT ON COLUMN survey_statistics.survey_uuid IS 'Внешний ключ survey.uuid';");
         $this->addSql("COMMENT ON COLUMN survey_statistics.number_questions IS 'Количество вопросов';");

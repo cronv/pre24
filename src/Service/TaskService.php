@@ -110,7 +110,7 @@ class TaskService extends BaseService
         }
 
         $surveyName = $this->findName($request->name, Task::class);
-        if ($surveyName && $surveyName->getUuid() !== $request->uuid) {
+        if ($surveyName && $surveyName->getId() !== $request->uuid) {
             $this->setHttpCode(Response::HTTP_CONFLICT);
             return new ResponseDTO(
                 message: null,
@@ -132,7 +132,7 @@ class TaskService extends BaseService
 
         return new ResponseDTO(
             message: sprintf('Ресурс `%s` успешно обновлен.', $entityTask->getName()),
-            errors: ['name' => 'Такая задача уже существует.']
+            errors: []
         );
     }
 

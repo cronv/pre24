@@ -48,6 +48,10 @@ trait ServiceStoreTrait
      */
     public function deleteMultipleRecords(...$entities): void
     {
+        if (!$entities) {
+            return;
+        }
+
         $doctrine = $this->em;
         try {
             $manager = $doctrine->getManager();

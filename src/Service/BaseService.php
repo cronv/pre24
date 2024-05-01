@@ -123,6 +123,54 @@ abstract class BaseService
     }
 
     /**
+     * Get count question.
+     *
+     * @param string $persistent Entity
+     * @param string $uuid UUID
+     * @return int
+     */
+    protected function questionCount(string $persistent, string $uuid): int
+    {
+        return $this->em->getRepository($persistent)->questionCount($uuid);
+    }
+
+    /**
+     * Get count question.
+     *
+     * @param string $persistent Entity
+     * @param string $uuid UUID
+     * @return ?string
+     */
+    protected function lastUuid(string $persistent, string $uuid): ?string
+    {
+        return $this->em->getRepository($persistent)->lastUuid($uuid);
+    }
+
+    /**
+     * Get list question.
+     *
+     * @param string $persistent Entity
+     * @param string $uuid UUID
+     * @return ?array
+     */
+    public function question(string $persistent, string $uuid): ?array
+    {
+        return $this->em->getRepository($persistent)->question($uuid);
+    }
+
+    /**
+     * Get count correct answers.
+     *
+     * @param string $persistent Entity
+     * @param string $uuid UUID
+     * @return ?int
+     */
+    public function correctCount(string $persistent, string $uuid): ?int
+    {
+        return $this->em->getRepository($persistent)->correctCount($uuid);
+    }
+
+    /**
      * Search survey by id (uuid)
      *
      * @param string|int $id ID

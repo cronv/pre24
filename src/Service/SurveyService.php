@@ -13,6 +13,7 @@ use cronv\Task\Management\DTO\Survey\AssignmentDTO;
 use cronv\Task\Management\DTO\Survey\AssignmentUpdateDTO;
 use cronv\Task\Management\DTO\Survey\DeleteAssigmentDTO;
 use cronv\Task\Management\DTO\Survey\ParamsDTO;
+use cronv\Task\Management\DTO\Survey\ProcessedDTO;
 use cronv\Task\Management\DTO\Survey\QuestionAddDTO;
 use cronv\Task\Management\DTO\Survey\QuestionUpdateDTO;
 use cronv\Task\Management\DTO\Survey\SurveyDTO;
@@ -23,6 +24,9 @@ use cronv\Task\Management\Entity\Survey\Question;
 use cronv\Task\Management\Entity\Survey\QuestionType;
 use cronv\Task\Management\Entity\Survey\Survey;
 use cronv\Task\Management\Entity\Survey\SurveyAssignment;
+use cronv\Task\Management\Entity\Survey\SurveyResults;
+use cronv\Task\Management\Entity\Survey\SurveyStatistics;
+use cronv\Task\Management\Entity\Survey\SurveyMapping;
 use cronv\Task\Management\Entity\Task;
 use cronv\Task\Management\Entity\User;
 use cronv\Task\Management\Exception\StorageException;
@@ -36,6 +40,15 @@ use Symfony\Component\Validator\Validation;
  */
 class SurveyService extends BaseService
 {
+    /** @var string UUID new */
+    protected string $newUuid;
+
+    /** @var User User */
+    protected User $user;
+
+    /** @var Survey Survey */
+    protected Survey $survey;
+
     /**
      * SurveyService constructor
      *
@@ -110,27 +123,161 @@ class SurveyService extends BaseService
     {
         $std = new \stdClass();
         $std->assignment = $this->findOneBy(SurveyAssignment::class, ['survey' => $params->uuid]);
-        // TODO: results, statistics
+        $std->statistics = $this->findBy(SurveyStatistics::class, ['survey' => $params->uuid]);
 
         return $std;
     }
 
     /**
+     * List answer by question or answer ids.
+     *
+     * @param array $params Params
+     * @return ?array
+     */
+    public function getSurveyAnswers(array $params): ?array
+    {
+        return $this->em->getRepository(Question::class)->getAnswers($params);
+    }
+
+    /**
      * Processed survey.
      *
-     * @param ParamsDTO $params Params DTO
+     * @param ProcessedDTO $params DTO
      * @return object
      */
-    public function processed(ParamsDTO $params): object
+    public function processed(ProcessedDTO $params): object
     {
         $std = new \stdClass();
+        $std->final = false;
+        $std->page = $params->page;
+        $std->uuid = $params->uuid;
         $next = $this->next(Survey::class, [
             'uuid' => $params->uuid,
             'page' => $params->page
         ]);
+        $this->newUuid = $this->getLastUuid($params->uuid);
         $std->question = $next->pagination->getIterator()->current();
+        $std->qCount = $this->questionCount(Survey::class, $params->uuid);
         $std->answers = $this->findBy(Answer::class, ['question' => $std->question['q_id']]);
+        $listResults = $this->findBy(SurveyResults::class, [
+            'uuid' => $this->newUuid,
+            'user' => $params->userId,
+            'survey' => $params->uuid,
+            'question' => $std->question['q_id'],
+        ]);
+
+        // insert/update result
+        if ($params->radio || $params->textarea || $params->checkbox) {
+            $key = $answerId = null;
+
+            if ($params->radio) {
+                $answerId = $key = $params->radio;
+            } elseif ($params->textarea) {
+                $answerFirst = $this->findOneBy(Answer::class, ['question' => $std->question['q_id']],
+                    ['question' => 'ASC']);
+                $answerId = $answerFirst->getId();
+                $key = $params->textarea;
+            }
+
+            $this->user = $this->find($params->userId, User::class);
+            $this->survey = $this->find($params->uuid, Survey::class);
+            $question = $this->find($std->question['q_id'], Question::class);
+
+            if ($params->checkbox) {
+                // clear pre-results [checkbox]
+                $this->deleteMultipleRecords($listResults);
+
+                $listAnswer = $this->getSurveyAnswers([
+                    'uuid' => $params->uuid,
+                    'id' => $std->question['q_id'],
+                ]);
+
+                $results = [];
+                foreach ($listAnswer as $answer) {
+                    if (in_array($answer->getId(), array_keys($params->checkbox))
+                        && ($validateAnswer = $this->getSurveyAnswers([
+                        'uuid' => $params->uuid,
+                        'id' => $std->question['q_id'],
+                        'ids' => [$answer->getId()]
+                    ]))) {
+                        $surveyResults = new SurveyResults(
+                            uuid: $this->newUuid,
+                            user: $this->user,
+                            survey: $this->survey,
+                            question: $question
+                        );
+                        $results[] = $surveyResults
+                            ->setAnswer(array_shift($validateAnswer))
+                            ->setText(null);
+                    }
+                }
+            } else {
+                if (!($results = $this->findOneBy(SurveyResults::class, [
+                    'uuid' => $this->newUuid,
+                    'user' => $params->userId,
+                    'survey' => $params->uuid,
+                    'question' => $std->question['q_id'],
+                ]))) {
+                    $results = new SurveyResults(
+                        uuid: $this->newUuid,
+                        user: $this->user,
+                        survey: $this->survey,
+                        question: $question
+                    );
+                }
+
+                $answer = $this->find($answerId, Answer::class);
+
+                $results->setAnswer($answer)->setText(null);
+                if ($results->getQuestion()->getQuestionType()->getName() == 'textarea') {
+                    $results->setText($key);
+                }
+            }
+
+            // saved
+            $this->store($results);
+        }
+
+        // update results
+        $listResults = $this->findBy(SurveyResults::class, [
+            'uuid' => $this->newUuid,
+            'user' => $params->userId,
+            'survey' => $params->uuid,
+            'question' => $std->question['q_id'],
+        ]);
+        $std->results = array_map(fn($v) => $v->getAnswer()->getId(), $listResults) ?: [];
+
+        // step
+        $std->incPage = $params->page;
+        if ($std->page < $std->qCount) {
+            $std->incPage = $params->page + 1;
+        } elseif ($std->page === $std->qCount && isset($params->send)) {
+            $this->pushStatistics($params);
+            $std->final = true;
+        }
+
         return $std;
+    }
+
+    /**
+     * Pushing statistics (final).
+     *
+     * @param ProcessedDTO $params Params
+     * @return void
+     */
+    protected function pushStatistics(ProcessedDTO $params): void
+    {
+        $question = $this->question(Survey::class, $params->uuid);
+        $std = new \stdClass();
+        $std->numberQuest = sizeof($question);
+        $std->correctAnswer = $this->correctCount(SurveyResults::class, $this->newUuid);
+        $this->store(new SurveyStatistics(
+            uuid: $this->newUuid,
+            user: $this->user,
+            survey: $this->survey,
+            numberQuestions: $std->numberQuest,
+            numberCorrect: $std->correctAnswer,
+        ));
     }
 
     /**
@@ -631,6 +778,44 @@ class SurveyService extends BaseService
     public function getSurvey(): array
     {
         return $this->em->getRepository(Survey::class)->findAll();
+    }
+
+    /**
+     * Get statistics (all).
+     *
+     * @return ?array
+     */
+    public function statistics(): ?array
+    {
+        return $this->em->getRepository(SurveyStatistics::class)->findAll();
+    }
+
+    /**
+     * Get last UUID new.
+     *
+     * @param string $uuid UUID
+     * @return string
+     */
+    public function getLastUuid(string $uuid): string
+    {
+        $statistics = $this->findOneBy(SurveyResults::class, ['uuid' => $uuid]);
+        $uuidResults = $this->findOneBy(SurveyMapping::class, [
+            'userId' => $this->getUserId(),
+            'uuid' => $uuid
+        ]);
+
+        if (!$statistics && !$uuidResults) {
+            $urEntity = new SurveyMapping(
+                uuid: $uuid,
+                userId: $this->getUserId()
+            );
+            try {
+                $this->store($urEntity);
+            } catch (StorageException $e) {}
+            return $urEntity->getUuidNew();
+        }
+
+        return $uuidResults->getUuidNew();
     }
 
     /**

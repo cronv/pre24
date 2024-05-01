@@ -6,6 +6,7 @@ use cronv\Task\Management\DTO\PaginatorDTO;
 use cronv\Task\Management\Entity\Survey\Question;
 use cronv\Task\Management\Entity\Survey\Survey;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\Tools\Pagination\Paginator;
@@ -84,9 +85,11 @@ class SurveyRepository extends ServiceEntityRepository
             ->select('e, q.name, q.id q_id')
             ->leftJoin(Question::class, 'q', Join::WITH, 'q.survey = e.uuid')
             ->where('e.uuid = :uuid')
-            ->setParameter('uuid', $uuid);
+            ->setParameter('uuid', $uuid)
+            ->orderBy('q.id', 'ASC')
+        ;
 
-        $paginator = new Paginator($queryBuilder, true);
+        $paginator = new Paginator($queryBuilder, false);
         $paginator
             ->getQuery()
             ->setFirstResult($limit * ($page - 1))
@@ -102,6 +105,42 @@ class SurveyRepository extends ServiceEntityRepository
             lastPage: $lastPage,
             page: $page,
         );
+    }
+
+    /**
+     * Get list questions.
+     *
+     * @param string $uuid UUID
+     * @return array|null
+     */
+    public function question(string $uuid): ?array
+    {
+        $queryBuilder = $this->createQueryBuilder('e')
+            ->select('q')
+            ->leftJoin(Question::class, 'q', Join::WITH, 'q.survey = e.uuid')
+            ->where('e.uuid = :uuid')
+            ->setParameter('uuid', $uuid)
+            ->orderBy('q.id', 'ASC')
+        ;
+
+        return $queryBuilder->getQuery()->getResult();
+    }
+
+    /**
+     * Get count question.
+     *
+     * @param string $uuid UUID
+     * @return ?int
+     */
+    public function questionCount(string $uuid): ?int
+    {
+        $queryBuilder = $this->createQueryBuilder('e')
+            ->select('COUNT(q.id) cnt')
+            ->leftJoin(Question::class, 'q', Join::WITH, 'q.survey = e.uuid')
+            ->where('e.uuid = :uuid')
+            ->setParameter('uuid', $uuid)
+            ->groupBy('e.uuid');
+        return $queryBuilder->getQuery()->getResult(AbstractQuery::HYDRATE_SINGLE_SCALAR);
     }
 
     /**

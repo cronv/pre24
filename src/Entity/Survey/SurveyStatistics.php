@@ -13,29 +13,6 @@ use Symfony\Component\Uid\UuidV4;
 #[ORM\Entity(repositoryClass: SurveyStatisticsRepository::class)]
 class SurveyStatistics
 {
-    /** @var string UUID */
-    #[ORM\Id]
-    #[ORM\Column(name: "uuid", type: Types::GUID)]
-    private string $uuid;
-
-    /** @var User User */
-    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: "users")]
-    #[ORM\JoinColumn(name: "user_id", referencedColumnName: "id")]
-    private User $userId;
-
-    /** @var Survey Survey */
-    #[ORM\ManyToOne(targetEntity: Survey::class, inversedBy: "survey")]
-    #[ORM\JoinColumn(name: "survey_uuid", referencedColumnName: "uuid")]
-    private Survey $surveyUuid;
-
-    /** @var int Number of questions */
-    #[ORM\Column(name: "number_questions", type: Types::INTEGER)]
-    private int $numberQuestions;
-
-    /** @var int Number of correct */
-    #[ORM\Column(name: "number_correct", type: Types::INTEGER)]
-    private int $numberCorrect;
-
     /** @var DateTimeInterface Created */
     #[ORM\Column(name: "created_at", type: Types::DATETIME_MUTABLE, insertable: false, updatable: false)]
     private DateTimeInterface $createdAt;
@@ -43,9 +20,33 @@ class SurveyStatistics
     /**
      * SurveyResults constructor.
      */
-    public function __construct()
+    /**
+     * @param string $uuid UUID
+     * @param User $user User
+     * @param Survey $survey Survey
+     * @param int $numberQuestions Number of questions
+     * @param int $numberCorrect Number of correct
+     */
+    public function __construct(
+        #[ORM\Id]
+        #[ORM\Column(name: "uuid", type: Types::GUID)]
+        private readonly string $uuid,
+
+        #[ORM\ManyToOne(targetEntity: User::class, inversedBy: "users")]
+        #[ORM\JoinColumn(name: "user_id", referencedColumnName: "id")]
+        private readonly User $user,
+
+        #[ORM\ManyToOne(targetEntity: Survey::class, inversedBy: "survey")]
+        #[ORM\JoinColumn(name: "survey_uuid", referencedColumnName: "uuid")]
+        private readonly Survey $survey,
+
+        #[ORM\Column(name: "number_questions", type: Types::INTEGER)]
+        private readonly int $numberQuestions,
+
+        #[ORM\Column(name: "number_correct", type: Types::INTEGER)]
+        private readonly int $numberCorrect,
+    )
     {
-        $this->uuid = UuidV4::v4();
     }
 
     /**
@@ -63,9 +64,9 @@ class SurveyStatistics
      *
      * @return User
      */
-    public function getUserId(): User
+    public function getUser(): User
     {
-        return $this->userId;
+        return $this->user;
     }
 
     /**
@@ -73,9 +74,9 @@ class SurveyStatistics
      *
      * @return Survey
      */
-    public function getSurveyUuid(): Survey
+    public function getSurvey(): Survey
     {
-        return $this->surveyUuid;
+        return $this->survey;
     }
 
     /**

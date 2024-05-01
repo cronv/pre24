@@ -2,8 +2,12 @@
 
 namespace cronv\Task\Management\Repository\Survey;
 
+use cronv\Task\Management\Entity\Survey\Answer;
+use cronv\Task\Management\Entity\Survey\Question;
 use cronv\Task\Management\Entity\Survey\SurveyResults;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\AbstractQuery;
+use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -28,5 +32,23 @@ class SurveyResultsRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, SurveyResults::class);
+    }
+
+    /**
+     * Get count correct answers (total).
+     *
+     * @param string $uuid UUID mapping
+     * @return int|null
+     */
+    public function correctCount(string $uuid): ?int
+    {
+        $queryBuilder = $this->createQueryBuilder('e')
+            ->select('COUNT(a.id) cnt')
+            ->leftJoin(Answer::class, 'a', Join::WITH, 'e.answer = a.id')
+            ->where('e.uuid = :uuid')
+            ->andWhere('a.isCorrect = TRUE')
+            ->setParameter('uuid', $uuid);
+
+        return $queryBuilder->getQuery()->getResult(AbstractQuery::HYDRATE_SINGLE_SCALAR);
     }
 }

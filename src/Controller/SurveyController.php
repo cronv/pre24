@@ -10,6 +10,7 @@ use cronv\Task\Management\DTO\Survey\AssignmentDTO;
 use cronv\Task\Management\DTO\Survey\AssignmentUpdateDTO;
 use cronv\Task\Management\DTO\Survey\DeleteAssigmentDTO;
 use cronv\Task\Management\DTO\Survey\ParamsDTO;
+use cronv\Task\Management\DTO\Survey\ProcessedDTO;
 use cronv\Task\Management\DTO\Survey\QuestionAddDTO;
 use cronv\Task\Management\DTO\Survey\QuestionUpdateDTO;
 use cronv\Task\Management\DTO\Survey\SurveyDTO;
@@ -17,8 +18,10 @@ use cronv\Task\Management\DTO\Survey\UpdateSurveyDTO;
 use cronv\Task\Management\Exception\StorageException;
 use cronv\Task\Management\Service\SurveyService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * Controller survey
@@ -32,6 +35,7 @@ class SurveyController extends BaseController
      */
     public function __construct(
         protected readonly SurveyService $surveyService,
+        protected readonly UrlGeneratorInterface $urlGenerator
     )
     {
     }
@@ -206,20 +210,47 @@ class SurveyController extends BaseController
     /**
      * Action processed survey
      *
-     * @param ParamsDTO $request ListParams DTO
+     * @param ProcessedDTO $request DTO
      * @return Response
      */
     #[Route(path: '/survey/processed/{uuid}/{page<\d+>}', name: 'ctb-survey-processed', defaults: ['page' => 1],
         methods: ['GET', 'POST'])]
-    public function processedSurvey(ParamsDTO $request): Response
+    public function processedSurvey(ProcessedDTO $request): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
         $service = $this->surveyService;
+        $service->setUserId($this->getUser()->getId())
+            ->setRoles($this->getUser()->getRoles());
         $request->userId = $this->getUser()?->getId();
         $object = $service->processed($request);
 
+        // redirect attempts action
+        if ($object->final) {
+            $url = $this->generateUrl('ctb-survey-as', ['uuid' => $request->uuid]);
+            return new RedirectResponse($url);
+        }
+
         return $this->render('@cronvTaskManagement/survey/processed.html.twig', [
             'processed' => $object,
+        ]);
+    }
+
+    /**
+     * Action statistics survey
+     *
+     * @return Response
+     */
+    #[Route(path: '/survey/statistics', name: 'ctb-survey-statistics', methods: ['GET', 'POST'])]
+    public function statistics(): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $service = $this->surveyService;
+        $service->setUserId($this->getUser()->getId())
+            ->setRoles($this->getUser()->getRoles());
+        $statistics = $service->statistics();
+
+        return $this->render('@cronvTaskManagement/survey/statistics.html.twig', [
+            'statistics' => $statistics,
         ]);
     }
 

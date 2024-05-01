@@ -12,13 +12,14 @@ use Doctrine\ORM\Mapping as ORM;
 class SurveyResults
 {
     /** @var Answer Answer */
+    #[ORM\Id]
     #[ORM\ManyToOne(targetEntity: Answer::class, inversedBy: "answer")]
     #[ORM\JoinColumn(name: "answer_id", referencedColumnName: "id")]
     private Answer $answer;
 
-    /** @var string Вводимый ответ */
-    #[ORM\Column(name: "text", type: Types::STRING, nullable: true)]
-    private string $text;
+    /** @var ?string Вводимый ответ */
+    #[ORM\Column(name: "text", type: Types::TEXT, nullable: true)]
+    private ?string $text;
 
     /**
      * SurveyResults constructor.
@@ -31,7 +32,7 @@ class SurveyResults
     public function __construct(
         #[ORM\Id]
         #[ORM\Column(name: "uuid", type: Types::GUID)]
-        private readonly string $uuid,
+        private string $uuid,
 
         #[ORM\ManyToOne(targetEntity: User::class, inversedBy: "users")]
         #[ORM\JoinColumn(name: "user_id", referencedColumnName: "id")]
@@ -102,11 +103,12 @@ class SurveyResults
      * Set answer.
      *
      * @param Answer $answer Answer
-     * @return void
+     * @return self
      */
-    public function setAnswer(Answer $answer): void
+    public function setAnswer(Answer $answer): self
     {
         $this->answer = $answer;
+        return $this;
     }
 
     /**
@@ -122,11 +124,12 @@ class SurveyResults
     /**
      * Set text.
      *
-     * @param string $text Text (answer)
-     * @return void
+     * @param ?string $text Text (answer)
+     * @return self
      */
-    public function setText(string $text): void
+    public function setText(?string $text): self
     {
         $this->text = $text;
+        return $this;
     }
 }

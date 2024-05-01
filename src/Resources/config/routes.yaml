@@ -92,3 +92,7 @@ ctb-survey-as:
 ctb-survey-processed:
   resource: '@cronvTaskManagementBundle/Controller'
   type: attribute
+
+ctb-survey-statistics:
+  resource: '@cronvTaskManagementBundle/Controller'
+  type: attribute

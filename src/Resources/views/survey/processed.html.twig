@@ -1,6 +1,6 @@
 {% extends 'survey/index.html.twig' %}
 
-{% set title = 'Данные опроса' %}
+{% block title %}Опрос{% endblock %}
 
 {% block content %}
     {% set current = processed.question %}
@@ -8,6 +8,7 @@
     <!-- Титул опроса -->
     <div class="mt-5 mb-3">
         <h1 class="text-center">{{ survey.getName }}</h1>
+        <p>({{ processed.page }} / {{ processed.qCount }})</p>
     </div>
 
     <!-- Вопрос -->
@@ -16,16 +17,40 @@
         <p>{{ current.name }}</p>
     </div>
 
-    <form action="POST">
-        <!-- Перечисление с радиокнопками -->
+    <form method="POST" action="{{ path('ctb-survey-processed', {'uuid': processed.uuid, 'page': processed.incPage}) }}">
+        <!-- Перечисления -->
         <div class="mb-4">
-            <h3>Выберите один вариант:</h3>
+            {% set break = false %}
+            {% set title_head = false %}
             {% for answer in processed.answers %}
                 {% set questType = answer.getQuestion.getQuestionType %}
                 {% if questType.getName == 'radio' %}
+                    {% if not title_head %}
+                        <h3>Выберите один вариант:</h3>
+                        {% set title_head = true %}
+                    {% endif %}
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="radio" id="radio{{ questType.getId }}">
-                        <label class="form-check-label" for="radio{{ questType.getId }}">
+                        <input class="form-check-input" type="radio" name="radio" value="{{ answer.getId }}" id="radio{{ answer.getQuestion.getId }}"
+                                {% if answer.getId in processed.results %} checked{% endif %}>
+                        <label class="form-check-label" for="radio{{ answer.getQuestion.getId }}">
+                            {{ answer.getValue }}
+                        </label>
+                    </div>
+                {% elseif questType.getName == 'textarea' and not break %}
+                    <div class="form-group">
+                        <textarea class="form-control" id="textarea{{ answer.getQuestion.getId }}" name="textarea"></textarea>
+                        <label for="textarea{{ answer.getQuestion.getId }}">Введите ответ:</label>
+                    </div>
+                    {% set break = true %}
+                {% elseif questType.getName == 'checkbox' %}
+                    {% if not title_head %}
+                        <h3>Выберите несколько вариантов:</h3>
+                        {% set title_head = true %}
+                    {% endif %}
+                    <div class="form-group">
+                        <input class="form-check-input" type="checkbox" name="checkbox[{{ answer.getId }}]" id="checkbox{{ answer.getQuestion.getId }}"
+                            {% if answer.getId in processed.results %} checked{% endif %}>
+                        <label class="form-check-label" for="checkbox{{ answer.getQuestion.getId }}">
                             {{ answer.getValue }}
                         </label>
                     </div>
@@ -35,7 +60,11 @@
 
         <!-- Кнопка отправки ответа -->
         <div class="text-end">
-            <button type="submit" class="btn btn-primary">Отправить >></button>
+            {% if processed.qCount == processed.page %}
+                <button type="submit" name="send" class="btn btn-success">Сдать опрос</button>
+            {% else %}
+                <button type="submit" class="btn btn-primary">Отправить >></button>
+            {% endif %}
         </div>
     </form>
 {% endblock %}

@@ -1,17 +1,9 @@
-{% extends 'survey/index.html.twig' %}
+{% extends 'survey/attempts.html.twig' %}
 
-{% block title %}Данные опроса{% endblock %}
+{% block title %}Статистика{% endblock %}
 
 {% block content %}
-    <!-- Кнопка "Пройти опрос" -->
-    <div id="goToSurvey" class="text-center mb-3">
-        <p class="fs-4">{{ attempts.assignment.survey.getName }}</p>
-        <a class="btn btn-primary" href="{{ path('ctb-survey-processed', {'uuid': attempts.assignment.survey.getUuid}) }}">Пройти опрос</a>
-    </div>
-
-    <!-- Список с подчеркиваниями -->
-    <hr>
-    {% set statistics = attempts.statistics %}
+    <!-- Таблица -->
     {% block table %}
         <span class="fw-bold">Статистика</span>
         <div id="scoreList" class="table-responsive">

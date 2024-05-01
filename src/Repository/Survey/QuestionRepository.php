@@ -3,6 +3,7 @@
 namespace cronv\Task\Management\Repository\Survey;
 
 use cronv\Task\Management\DTO\PaginatorDTO;
+use cronv\Task\Management\DTO\Survey\ParamsDTO;
 use cronv\Task\Management\Entity\Survey\Answer;
 use cronv\Task\Management\Entity\Survey\Question;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -89,5 +90,39 @@ class QuestionRepository extends ServiceEntityRepository
             ->setParameter('uuid', $uuid)
             ->getQuery()
             ->getOneOrNullResult();
+    }
+
+    /**
+     * Get answers or by answers ids.
+     *
+     * @param array $params Params DTO
+     * @return array|null
+     */
+    public function getAnswers(array $params): ?array
+    {
+        $uuid = $params['uuid'];
+        $id = $params['id'];
+        $ids = [];
+
+        if (isset($params['ids']) && $params['ids']) {
+            $ids = $params['ids'];
+        }
+
+        $queryBuilder = $this->createQueryBuilder('e')
+            ->select('a')
+            ->leftJoin(Answer::class, 'a', Join::WITH, 'a.question = e.id')
+            ->where('e.survey = :survey_uuid')
+            ->andWhere('e.id = :question_id')
+            ->setParameter('survey_uuid', $uuid)
+            ->setParameter('question_id', $id);
+
+        if ($ids) {
+            $queryBuilder->andWhere('a.id IN (:ids)')
+                ->setParameter('ids', $ids);
+        }
+
+        $queryBuilder->orderBy('e.createdAt', 'DESC');
+
+        return $queryBuilder->getQuery()->getResult();
     }
 }

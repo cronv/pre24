@@ -78,16 +78,12 @@ abstract class AbstractJsonRequest
 
         // Form data
         if ($formData = $request->request->all()) {
-            $arrayData = [];
-            foreach ($formData as $property => $values) {
+            foreach ($formData as $property => $value) {
                 $attribute = self::camelCase($property);
 
-                foreach ($values as $k => $v) {
-                    $arrayData[$k] = $v;
-                }
                 if (property_exists($this, $attribute)) {
                     $reflectionProperty = $reflection->getProperty($attribute);
-                    $reflectionProperty->setValue($this, $arrayData);
+                    $reflectionProperty->setValue($this, $value);
                 }
             }
         }

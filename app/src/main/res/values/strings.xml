@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Заметки</string>
+    <string name="text_notes">Заметки</string>
+    <string name="text_login">Логин</string>
+    <string name="text_password">Пароль</string>
+    <string name="text_registration">Зарегистрироваться</string>
+    <string name="text_reg">Регистрация</string>
+    <string name="text_authorization">Авторизация</string>
+    <string name="text_create_account">Создать аккаунт</string>
+    <string name="text_come_in">Войти</string>
+    <string name="text_login_to_account">Войти в аккаунт</string>
+    <string name="text_list_empty">На данный момент список пуст</string>
+    <string name="text_save">Сохранить</string>
+    <string name="text_search">Поиск…</string>
+</resources>

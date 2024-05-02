@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_margin="5dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#f9f4f0"
+    tools:context=".packageActivity.CreateNotesActivity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbarCreateNotes"
+        app:title="Новая заметка"
+        app:titleTextColor="@android:color/white"
+        app:navigationIcon="@drawable/ic_back"
+        android:background="@drawable/shape_round"
+        android:backgroundTint="#32292e"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <Button
+        android:id="@+id/btnSaveNotes"
+        android:background="@android:color/transparent"
+        android:layout_alignTop="@id/toolbarCreateNotes"
+        android:layout_alignBottom="@id/toolbarCreateNotes"
+        android:text="@string/text_save"
+        android:textAllCaps="false"
+        android:textColor="@android:color/white"
+        android:textSize="13sp"
+        android:layout_marginEnd="10dp"
+        android:layout_alignParentEnd="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <EditText
+        android:id="@+id/edtTitle"
+        android:inputType="text|textCapSentences|textMultiLine"
+        android:maxLength="50"
+        android:hint="Название"
+        android:textSize="17sp"
+        android:textStyle="bold"
+        android:background="@android:color/transparent"
+        android:padding="10dp"
+        android:layout_marginTop="30dp"
+        android:layout_below="@id/toolbarCreateNotes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <EditText
+        android:id="@+id/edtTextNotes"
+        android:inputType="text|textCapSentences|textMultiLine"
+        android:gravity="start"
+        android:minLines="10"
+        android:hint="Текст заметки"
+        android:textSize="16sp"
+        android:background="@android:color/transparent"
+        android:padding="10dp"
+        android:layout_below="@id/edtTitle"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+</RelativeLayout>

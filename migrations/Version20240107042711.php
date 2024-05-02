@@ -117,7 +117,7 @@ final class Version20240107042711 extends AbstractMigration
         $this->addSql("COMMENT ON COLUMN survey_assignment.user_id IS 'Внешний ключ users.id';");
         $this->addSql("COMMENT ON COLUMN survey_assignment.survey_uuid IS 'Внешний ключ survey.uuid';");
         $this->addSql("COMMENT ON COLUMN survey_assignment.attempts IS 'Количество попыток';");
-        $this->addSql("COMMENT ON COLUMN survey_assignment.access IS 'Начало';");
+        $this->addSql("COMMENT ON COLUMN survey_assignment.access IS 'Доступ';");
         $this->addSql("COMMENT ON COLUMN survey_assignment.started_at IS 'Начало';");
         $this->addSql("COMMENT ON COLUMN survey_assignment.ended_at IS 'Окончание';");
 

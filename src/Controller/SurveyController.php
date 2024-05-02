@@ -202,6 +202,11 @@ class SurveyController extends BaseController
 
         $object = $service->infoAttempts($request);
 
+        if ($object->final) {
+            $url = $this->generateUrl('ctb-survey');
+            return new RedirectResponse($url);
+        }
+
         return $this->render('@cronvTaskManagement/survey/attempts.html.twig', [
             'attempts' => $object,
         ]);

@@ -114,6 +114,17 @@ class SurveyService extends BaseService
     }
 
     /**
+     * Get count statistics.
+     *
+     * @param string $uuid
+     * @return int
+     */
+    public function statisticsCount(string $uuid): int
+    {
+        return $this->em->getRepository(SurveyStatistics::class)->count(['survey' => $uuid]);
+    }
+
+    /**
      * Info attempts.
      *
      * @param ParamsDTO $params Params DTO
@@ -124,6 +135,10 @@ class SurveyService extends BaseService
         $std = new \stdClass();
         $std->assignment = $this->findOneBy(SurveyAssignment::class, ['survey' => $params->uuid]);
         $std->statistics = $this->findBy(SurveyStatistics::class, ['survey' => $params->uuid]);
+
+        if ($this->statisticsCount($params->uuid) < $std->assignment->getAttempts()) {
+            $std->final = true;
+        }
 
         return $std;
     }
@@ -265,7 +280,7 @@ class SurveyService extends BaseService
             $std->incPage = $params->page + 1;
         } elseif ($std->page === $std->qCount && isset($params->send)) {
             $this->pushStatistics($params);
-            // $std->final = true;
+            $std->final = true;
         }
 
         return $std;

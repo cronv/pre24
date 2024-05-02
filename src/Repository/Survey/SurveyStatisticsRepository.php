@@ -4,6 +4,7 @@ namespace cronv\Task\Management\Repository\Survey;
 
 use cronv\Task\Management\Entity\Survey\SurveyStatistics;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\AbstractQuery;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -20,8 +21,6 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class SurveyStatisticsRepository extends ServiceEntityRepository
 {
-    protected int $limit = 10;
-
     /**
      * {@inheritDoc}
      */

@@ -27,6 +27,17 @@
                         <a class="nav-link" href="{{ path('ctb-survey-admin') }}">Опрос</a>
                     </li>
                 {% endif %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" id="navbarDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        Расходы/Доходы
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown" data-bs-auto-close="false">
+                        <li><a class="dropdown-item" href="{{ path('ctb-expense-index') }}">Информация</a></li>
+                        <li><a class="dropdown-item" href="{{ path('ctb-expense') }}">Расходы</a></li>
+                        <li><a class="dropdown-item" href="{{ path('ctb-expense-income') }}">Доходы</a></li>
+                        <!-- Добавьте другие пункты меню здесь -->
+                    </ul>
+                </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ path('cronv-tm-bundle') }}">Инструкция</a>
                 </li>

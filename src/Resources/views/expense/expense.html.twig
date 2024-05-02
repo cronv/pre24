@@ -1,0 +1,75 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Анкеты{% endblock %}
+
+{% block javascripts %}
+    <script src="{{ asset('/bundles/cronvtaskmanagement/js/Classes/Survey.js') }}"></script>
+{% endblock %}
+
+{% block content %}
+    <!-- Кнопка "Добавить" с иконкой Font Awesome -->
+    <div id="showAdd"  class="d-flex justify-content-end mb-3">
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addModal"><i class="fas fa-plus"></i> Добавить</button>
+    </div>
+    {% block table %}
+
+        {% include 'expense/admin/add_expense.html.twig' %}
+        {% include 'expense/admin/update_expense.html.twig' %}
+
+        <!-- Таблица задач -->
+        <table class="table table-light table-striped table-responsive">
+            <thead class="table-secondary">
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Название</th>
+                <th scope="col">Создан</th>
+                <th scope="col">Обновлен</th>
+                <th scope="col">Кол-во вопросов</th>
+            </tr>
+            </thead>
+            <tbody>
+            <!-- Заполнение данными из базы данных -->
+            <!-- Пример одной строки таблицы (должен быть заменен данными из БД) -->
+            {% for item in pagination %}
+                {# Обрабатываем объект #}
+                {% set survey = item.0 %}
+
+                <tr data-id="{{ survey.getUuid }}">
+                    <td>
+                        <a href="{{ path('ctb-survey-admin-q', {'uuid': survey.getUuid}) }}">
+                            {{ survey.getUuid }}
+                        </a>
+                    </td>
+                    <td data-input-name="name">
+                        <div class="row">
+                            <div class="col-10">
+                                <div class="text-truncate">
+                                    {{ survey.getName }}
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>{{ survey.getCreatedAt|date('d.m.Y H:i:s') }}</td>
+                    <td>
+                        {% if survey.getUpdatedAt %}
+                            {{ survey.getUpdatedAt.format('d.m.Y H:i:s') }}
+                        {% else %}
+                            —
+                        {% endif %}
+                    </td>
+                    <td>{{ item.questionCount }}</td>
+                    <td>
+                        <a class="js-edit-render" href="#"><i class="fas fa-edit"></i></a>
+                        <a href="{{ path('ctb-survey-admin-delete', {'uuid': survey.getUuid}) }}" class="js-delete"><i class="fas fa-trash-alt"></i></a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <script>
+            Survey.startIndex = 1;
+            Survey.endIndex = 2;
+        </script>
+    {% endblock %}
+    {{ paginator_render|raw }}
+{% endblock %}

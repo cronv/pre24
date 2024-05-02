@@ -96,3 +96,16 @@ ctb-survey-processed:
 ctb-survey-statistics:
   resource: '@cronvTaskManagementBundle/Controller'
   type: attribute
+
+# Expense
+ctb-expense:
+  resource: '@cronvTaskManagementBundle/Controller'
+  type: attribute
+
+ctb-income:
+  resource: '@cronvTaskManagementBundle/Controller'
+  type: attribute
+
+ctb-expense-index:
+  resource: '@cronvTaskManagementBundle/Controller'
+  type: attribute

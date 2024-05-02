@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Анкеты{% endblock %}
+
+{% block javascripts %}
+    <script src="{{ asset('/bundles/cronvtaskmanagement/js/Classes/Survey.js') }}"></script>
+{% endblock %}
+
+{% block content %}
+    <div class="col-md-6">
+        <div class="balance-panel">
+            <h2 class="balance-title">Расход</h2>
+            <p class="balance-amount">{{ info.totalExpense }} руб.</p>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="balance-panel">
+            <h2 class="balance-title">Доход</h2>
+            <p class="balance-amount">{{ info.totalIncome }} руб.</p>
+        </div>
+    </div>
+{% endblock %}

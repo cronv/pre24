@@ -3,28 +3,6 @@
 {% block title %}Статистика{% endblock %}
 
 {% block content %}
-    <!-- Таблица -->
-    {% block table %}
-        <span class="fw-bold">Статистика</span>
-        <div id="scoreList" class="table-responsive">
-            <table class="table">
-                <thead>
-                <tr>
-                    <th scope="col">№</th>
-                    <th scope="col">Кол-во вопросов</th>
-                    <th scope="col">Балл</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for stat in statistics %}
-                    <tr>
-                        <td>{{ stat.getUuid() }}</td>
-                        <td>{{ stat.getNumberQuestions() }}</td>
-                        <td>{{ stat.getNumberCorrect() }}</td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    {% endblock %}
+    {% block nav_menu %}{% endblock %}
+    {% block table %}{{ parent() }}{% endblock %}
 {% endblock %}

@@ -3,11 +3,13 @@
 {% block title %}Данные опроса{% endblock %}
 
 {% block content %}
-    <!-- Кнопка "Пройти опрос" -->
-    <div id="goToSurvey" class="text-center mb-3">
-        <p class="fs-4">{{ attempts.assignment.survey.getName }}</p>
-        <a class="btn btn-primary" href="{{ path('ctb-survey-processed', {'uuid': attempts.assignment.survey.getUuid}) }}">Пройти опрос</a>
-    </div>
+    {% block nav_menu %}
+        <!-- Кнопка "Пройти опрос" -->
+        <div id="goToSurvey" class="text-center mb-3">
+            <p class="fs-4">{{ attempts.assignment.survey.getName }}</p>
+            <a class="btn btn-primary" href="{{ path('ctb-survey-processed', {'uuid': attempts.assignment.survey.getUuid}) }}">Пройти опрос</a>
+        </div>
+    {% endblock %}
 
     <!-- Список с подчеркиваниями -->
     <hr>
@@ -29,6 +31,10 @@
                         <td>{{ stat.getUuid() }}</td>
                         <td>{{ stat.getNumberQuestions() }}</td>
                         <td>{{ stat.getNumberCorrect() }}</td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="3">Данных нет.</td>
                     </tr>
                 {% endfor %}
                 </tbody>

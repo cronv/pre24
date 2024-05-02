@@ -159,11 +159,23 @@ class SurveyService extends BaseService
         $std->question = $next->pagination->getIterator()->current();
         $std->qCount = $this->questionCount(Survey::class, $params->uuid);
         $std->answers = $this->findBy(Answer::class, ['question' => $std->question['q_id']]);
+
+        // TODO: correct line (step)
+        $questionId = $std->question['q_id'];
+
+        if ($params->page > 2 && $params->page < $std->qCount) {
+            $next = $this->next(Survey::class, [
+                'uuid' => $params->uuid,
+                'page' => $params->page === 1 ? $params->page : $params->page - 1
+            ]);
+            $questionId = $next->pagination->getIterator()->current()['q_id'];
+        }
+
         $listResults = $this->findBy(SurveyResults::class, [
             'uuid' => $this->newUuid,
             'user' => $params->userId,
             'survey' => $params->uuid,
-            'question' => $std->question['q_id'],
+            'question' => $questionId,
         ]);
 
         // insert/update result
@@ -181,7 +193,7 @@ class SurveyService extends BaseService
 
             $this->user = $this->find($params->userId, User::class);
             $this->survey = $this->find($params->uuid, Survey::class);
-            $question = $this->find($std->question['q_id'], Question::class);
+            $question = $this->find($questionId, Question::class);
 
             if ($params->checkbox) {
                 // clear pre-results [checkbox]
@@ -189,7 +201,7 @@ class SurveyService extends BaseService
 
                 $listAnswer = $this->getSurveyAnswers([
                     'uuid' => $params->uuid,
-                    'id' => $std->question['q_id'],
+                    'id' => $questionId,
                 ]);
 
                 $results = [];
@@ -197,7 +209,7 @@ class SurveyService extends BaseService
                     if (in_array($answer->getId(), array_keys($params->checkbox))
                         && ($validateAnswer = $this->getSurveyAnswers([
                         'uuid' => $params->uuid,
-                        'id' => $std->question['q_id'],
+                        'id' => $questionId,
                         'ids' => [$answer->getId()]
                     ]))) {
                         $surveyResults = new SurveyResults(
@@ -253,7 +265,7 @@ class SurveyService extends BaseService
             $std->incPage = $params->page + 1;
         } elseif ($std->page === $std->qCount && isset($params->send)) {
             $this->pushStatistics($params);
-            $std->final = true;
+            // $std->final = true;
         }
 
         return $std;

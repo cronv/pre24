@@ -45,8 +45,10 @@ class SurveyResultsRepository extends ServiceEntityRepository
         $queryBuilder = $this->createQueryBuilder('e')
             ->select('COUNT(a.id) cnt')
             ->leftJoin(Answer::class, 'a', Join::WITH, 'e.answer = a.id')
+            ->leftJoin(Question::class, 'q', Join::WITH, 'e.question = q.id')
             ->where('e.uuid = :uuid')
             ->andWhere('a.isCorrect = TRUE')
+            ->orWhere('ILIKE(e.text, a.value) = TRUE')
             ->setParameter('uuid', $uuid);
 
         return $queryBuilder->getQuery()->getResult(AbstractQuery::HYDRATE_SINGLE_SCALAR);

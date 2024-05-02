@@ -1,0 +1,71 @@
+version: "3"
+services:
+  proxy:
+    image: haproxy:2.8-alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./configs/haproxy/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg
+      - ./configs/haproxy/haproxy.pem:/etc/ssl/certs/haproxy.pem
+    # restart: always
+    extra_hosts: # xdebug
+      - "host.docker.internal:host-gateway"
+    networks:
+      default:
+        ipv4_address: 172.18.0.2
+  newk2:
+    image: cronv/php:5.6-apache
+    depends_on:
+      - proxy
+    volumes:
+      - ./../new.kartoteka.ru/webdata:/var/www/html
+      - ./../new.kartoteka.ru/libs:/var/www/libs
+    environment:
+      ENVIRONMENT: development
+    # restart: always
+  symfony82:
+    image: cronv/php:8.2-apache # cronv/php:8.2-apache
+    depends_on:
+      - proxy
+    volumes:
+      - ./../symfony82:/var/www
+      - ./../mnt/mnt_symfony:/mnt
+
+      # Локальный репозиторий composer
+      - ./../localgist/:/opt/source/bundle/
+
+      #    # Options Docker (php)
+      - ./configs/symfony82/apache2/:/etc/apache2/sites-enabled/
+      - ./configs/php/php82/php.ini:/usr/local/etc/php/php.ini
+      - ./configs/php/php82/docker-php-ext-xdebug8.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+    environment:
+      ENVIRONMENT: development
+    working_dir: /var/www
+    networks:
+      default:
+        ipv4_address: 172.18.0.10
+  db_pg:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: base
+      POSTGRES_USER: root
+      PGPASSWORD: pass
+      POSTGRES_HOST_AUTH_METHOD: trust
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres:/var/lib/postgresql
+    restart: always
+
+volumes:
+  mysql:
+    external: true
+  mysql8:
+    external: true
+  postgres:
+    external: true
+  mongodb:
+    external: true
+  oracle:
+    external: true

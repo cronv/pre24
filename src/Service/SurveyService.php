@@ -133,6 +133,7 @@ class SurveyService extends BaseService
     public function infoAttempts(ParamsDTO $params): object
     {
         $std = new \stdClass();
+        $std->final = false;
         $std->assignment = $this->findOneBy(SurveyAssignment::class, ['survey' => $params->uuid]);
         $std->statistics = $this->findBy(SurveyStatistics::class, ['survey' => $params->uuid]);
 

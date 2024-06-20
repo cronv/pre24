@@ -1,0 +1,53 @@
+{% set idModal = idModal|default('addModal') %}
+{% set modalTitle = modalTitle|default('Добавить транзакцию') %}
+{% set action = action|default(path('ctb-transaction-add')) %}
+{% set method = method|default('POST') %}
+
+<!-- Modal -->
+<div class="modal fade" id="{{ idModal }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="addForm" action="{{ action }}" method="{{ method }}">
+                <!-- Форма для добавления задачи -->
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalLabel">{{ modalTitle }}</h5>
+                    <button type="button" class="btn-close ms-auto" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="typeFor" class="form-label">Тип операции</label>
+                        <select class="form-select" id="typeFor" name="type_id" required>
+                            {% for type in listType %}
+                                <option value="{{ type.getId }}">{{ type.getName }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="userId" class="form-label">Пользователь</label>
+                        <select class="form-select" id="userId" name="user_id" required>
+                            {% for user in listUsers %}
+                                <option value="{{ user.getId }}">{{ user.getUsername }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="amountFor" class="form-label">Сумма</label>
+                        <input type="number" step="0.01" class="form-control" id="amountFor" name="amount">
+                    </div>
+                    <div class="mb-3">
+                        <label for="descriptionFor" class="form-label">Описание</label>
+                        <input type="text" class="form-control" id="descriptionFor" name="description">
+                    </div>
+                    <div class="mb-3">
+                        <label for="datedAt" class="form-label">Дата</label>
+                        <input type="date" class="form-control" id="datedAt" name="dated_at">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отменить</button>
+                    <button type="submit" class="btn btn-primary">Сохранить</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

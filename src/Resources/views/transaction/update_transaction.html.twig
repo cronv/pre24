@@ -1,0 +1,6 @@
+{% extends 'transaction/add_transaction.html.twig' %}
+
+{% set idModal = 'editModal' %}
+{% set modalTitle = 'Обновить транзакцию' %}
+{% set action = path('ctb-transaction-update', {id: 1}) %}
+{% set method = 'PUT' %}

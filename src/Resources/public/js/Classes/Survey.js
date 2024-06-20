@@ -31,7 +31,7 @@ var Survey = {
                 'input[type="' + $(v).data('input-name') + '"], textarea[name="'
                 + $(v).data('input-name') + '"]' + ', select[name="' + $(v).data('input-name') + '"]');
 
-            if ((['deadline', 'type']).indexOf($(v).data('input-name')) !== -1) {
+            if ((['deadline', 'dated_at', 'type']).indexOf($(v).data('input-name')) !== -1) {
                 tmp.prop('value', $(v).prop('innerText').split(".").reverse().join("-"));
                 return;
             } else if ($(v).data('input-name') === 'datetime-local') {

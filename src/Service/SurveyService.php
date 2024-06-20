@@ -789,16 +789,6 @@ class SurveyService extends BaseService
     }
 
     /**
-     * List user.
-     *
-     * @return array<User>
-     */
-    public function getUsers(): array
-    {
-        return $this->em->getRepository(User::class)->findAll();
-    }
-
-    /**
      * List survey.
      *
      * @return array<Survey>

@@ -32,10 +32,11 @@
                         Расходы/Доходы
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown" data-bs-auto-close="false">
-                        <li><a class="dropdown-item" href="{{ path('ctb-expense-index') }}">Информация</a></li>
-                        <li><a class="dropdown-item" href="{{ path('ctb-expense') }}">Расходы</a></li>
-                        <li><a class="dropdown-item" href="{{ path('ctb-expense-income') }}">Доходы</a></li>
-                        <!-- Добавьте другие пункты меню здесь -->
+                        <li><a class="dropdown-item" href="{{ path('ctb-transaction-index') }}">Информация</a></li>
+                        <li><a class="dropdown-item" href="{{ path('ctb-transaction') }}">Транзакции</a></li>
+                        {% if is_granted('ROLE_ADMIN') %}
+                            <li><a class="dropdown-item" href="{{ path('ctb-transaction-type') }}">Типы транзакций</a></li>
+                        {% endif %}
                     </ul>
                 </li>
                 <li class="nav-item">

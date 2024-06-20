@@ -221,4 +221,14 @@ abstract class BaseService
         $userId = $this->getUserId();
         return $this->em->getRepository(User::class)->find($userId);
     }
+
+    /**
+     * List user.
+     *
+     * @return array<User>
+     */
+    public function getUsers(): array
+    {
+        return $this->em->getRepository(User::class)->findAll();
+    }
 }

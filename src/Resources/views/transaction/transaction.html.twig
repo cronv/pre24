@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Анкеты{% endblock %}
+{% block title %}Финансовые операции{% endblock %}
 
 {% block javascripts %}
     <script src="{{ asset('/bundles/cronvtaskmanagement/js/Classes/Survey.js') }}"></script>
@@ -13,54 +13,45 @@
     </div>
     {% block table %}
 
-        {% include 'expense/admin/add_expense.html.twig' %}
-        {% include 'expense/admin/update_expense.html.twig' %}
+        {% include 'transaction/add_transaction.html.twig' %}
+        {% include 'transaction/update_transaction.html.twig' %}
 
         <!-- Таблица задач -->
         <table class="table table-light table-striped table-responsive">
             <thead class="table-secondary">
             <tr>
                 <th scope="col">ID</th>
-                <th scope="col">Название</th>
+                <th scope="col">Тип</th>
+                <th scope="col">Описание</th>
+                <th scope="col">Сумма</th>
+                <th scope="col">Дата</th>
                 <th scope="col">Создан</th>
-                <th scope="col">Обновлен</th>
-                <th scope="col">Кол-во вопросов</th>
             </tr>
             </thead>
             <tbody>
             <!-- Заполнение данными из базы данных -->
             <!-- Пример одной строки таблицы (должен быть заменен данными из БД) -->
             {% for item in pagination %}
-                {# Обрабатываем объект #}
-                {% set survey = item.0 %}
-
-                <tr data-id="{{ survey.getUuid }}">
+                <tr data-id="{{ item.getId }}">
                     <td>
-                        <a href="{{ path('ctb-survey-admin-q', {'uuid': survey.getUuid}) }}">
-                            {{ survey.getUuid }}
-                        </a>
+                        {{ item.getId }}
                     </td>
                     <td data-input-name="name">
                         <div class="row">
                             <div class="col-10">
                                 <div class="text-truncate">
-                                    {{ survey.getName }}
+                                    {{ item.getType.getName }}
                                 </div>
                             </div>
                         </div>
                     </td>
-                    <td>{{ survey.getCreatedAt|date('d.m.Y H:i:s') }}</td>
-                    <td>
-                        {% if survey.getUpdatedAt %}
-                            {{ survey.getUpdatedAt.format('d.m.Y H:i:s') }}
-                        {% else %}
-                            —
-                        {% endif %}
-                    </td>
-                    <td>{{ item.questionCount }}</td>
+                    <td data-input-name="description">{{ item.getDescription }}</td>
+                    <td data-input-name="amount">{{ item.getAmount }}</td>
+                    <td data-input-name="dated_at">{{ item.getDateAt|date('d.m.Y') }}</td>
+                    <td>{{ item.getCreatedAt|date('d.m.Y H:i:s') }}</td>
                     <td>
                         <a class="js-edit-render" href="#"><i class="fas fa-edit"></i></a>
-                        <a href="{{ path('ctb-survey-admin-delete', {'uuid': survey.getUuid}) }}" class="js-delete"><i class="fas fa-trash-alt"></i></a>
+                        <a href="{{ path('ctb-transaction-delete', {'id': item.getId}) }}" class="js-delete"><i class="fas fa-trash-alt"></i></a>
                     </td>
                 </tr>
             {% endfor %}
@@ -68,7 +59,7 @@
         </table>
         <script>
             Survey.startIndex = 1;
-            Survey.endIndex = 2;
+            Survey.endIndex = 5;
         </script>
     {% endblock %}
     {{ paginator_render|raw }}

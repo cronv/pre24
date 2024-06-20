@@ -1,0 +1,47 @@
+{% extends 'transaction/transaction.html.twig' %}
+
+{% block title %}Тип финансовых операций{% endblock %}
+
+{% block table %}
+
+    {% include 'transaction/add_transaction_type.html.twig' %}
+    {% include 'transaction/update_transaction_type.html.twig' %}
+
+    <!-- Таблица задач -->
+    <table class="table table-light table-striped table-responsive">
+        <thead class="table-secondary">
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Название</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- Заполнение данными из базы данных -->
+        <!-- Пример одной строки таблицы (должен быть заменен данными из БД) -->
+        {% for item in pagination %}
+            <tr data-id="{{ item.getId }}">
+                <td>
+                    {{ item.getId }}
+                </td>
+                <td data-input-name="name">
+                    <div class="row">
+                        <div class="col-10">
+                            <div class="text-truncate">
+                                {{ item.getName }}
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <a class="js-edit-render" href="#"><i class="fas fa-edit"></i></a>
+                    <a href="{{ path('ctb-transaction-type-delete', {'id': item.getId}) }}" class="js-delete"><i class="fas fa-trash-alt"></i></a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <script>
+        Survey.startIndex = 1;
+        Survey.endIndex = 2;
+    </script>
+{% endblock %}

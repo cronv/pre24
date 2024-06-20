@@ -97,15 +97,39 @@ ctb-survey-statistics:
   resource: '@cronvTaskManagementBundle/Controller'
   type: attribute
 
-# Expense
-ctb-expense:
+# Transaction
+ctb-transaction:
   resource: '@cronvTaskManagementBundle/Controller'
   type: attribute
 
-ctb-income:
+ctb-transaction-index:
   resource: '@cronvTaskManagementBundle/Controller'
   type: attribute
 
-ctb-expense-index:
+ctb-transaction-type:
+  resource: '@cronvTaskManagementBundle/Controller'
+  type: attribute
+
+ctb-transaction-add:
+  resource: '@cronvTaskManagementBundle/Controller'
+  type: attribute
+
+ctb-transaction-update:
+  resource: '@cronvTaskManagementBundle/Controller'
+  type: attribute
+
+ctb-transaction-delete:
+  resource: '@cronvTaskManagementBundle/Controller'
+  type: attribute
+
+ctb-transaction-type-add:
+  resource: '@cronvTaskManagementBundle/Controller'
+  type: attribute
+
+ctb-transaction-type-update:
+  resource: '@cronvTaskManagementBundle/Controller'
+  type: attribute
+
+ctb-transaction-type-delete:
   resource: '@cronvTaskManagementBundle/Controller'
   type: attribute

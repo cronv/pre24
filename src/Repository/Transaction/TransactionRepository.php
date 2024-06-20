@@ -1,9 +1,9 @@
 <?php
 
-namespace cronv\Task\Management\Repository\Expense;
+namespace cronv\Task\Management\Repository\Transaction;
 
 use cronv\Task\Management\DTO\PaginatorDTO;
-use cronv\Task\Management\Entity\Expense\Expense;
+use cronv\Task\Management\Entity\Transaction\Transaction;
 use cronv\Task\Management\Entity\Survey\Question;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query\Expr\Join;
@@ -11,18 +11,18 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * Repository for expense information.
+ * Repository for transaction statistics.
  *
- * @extends ServiceEntityRepository<Expense> Optional base class ServiceEntityRepository with a simplified constructor
+ * @extends ServiceEntityRepository<Transaction> Optional base class ServiceEntityRepository with a simplified constructor
  * (for auto-wiring).
  *
- * @method Expense|null find($id, $lockMode = null, $lockVersion = null) Finds an entity by its primary key/identifier.
- * @method Expense|null findOneBy(array $criteria, array $orderBy = null) Finds a single entity by a set of criteria.
- * @method Expense[]    findAll() Finds all entities in the repository.
- * @method Expense[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null) Finds entities
+ * @method Transaction|null find($id, $lockMode = null, $lockVersion = null) Finds an entity by its primary key/identifier.
+ * @method Transaction|null findOneBy(array $criteria, array $orderBy = null) Finds a single entity by a set of criteria.
+ * @method Transaction[]    findAll() Finds all entities in the repository.
+ * @method Transaction[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null) Finds entities
  * by a set of criteria.
  */
-class ExpenseRepository extends ServiceEntityRepository
+class TransactionRepository extends ServiceEntityRepository
 {
     protected int $limit = 10;
 
@@ -31,7 +31,7 @@ class ExpenseRepository extends ServiceEntityRepository
      */
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Expense::class);
+        parent::__construct($registry, Transaction::class);
     }
 
     /**
